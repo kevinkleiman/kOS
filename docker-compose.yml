@@ -6,3 +6,4 @@ services:
       context: ./env
     image: os-dev-env:latest
     container_name: os-dev-env
+    tty: true
