@@ -1,6 +1,6 @@
+#include <kernel.h>
 
-
-int main()
+void main()
 {
 
 }
