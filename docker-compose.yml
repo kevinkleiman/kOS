@@ -7,3 +7,5 @@ services:
     image: os-dev-env:latest
     container_name: os-dev-env
     tty: true
+    volumes:
+    - ./env:/root/env
