@@ -5,4 +5,4 @@ build:
 rm:
 	docker-compose down
 run:
-	qemu-system-x86_64.exe -fda ./env/build/$(BUILD_TARGET).bin
+	qemu-system-x86_64.exe -fda ./env/bin/$(BUILD_TARGET).bin

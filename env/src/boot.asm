@@ -1,8 +1,6 @@
 ; Set boot sector origin memory address
 org 0x7C00
 
-%include "print.asm"
-
 mov si, STR_BOOTING
 call print_string
 
@@ -45,6 +43,9 @@ disk_error:
 	mov si, STR_DISK_ERROR
 	call print_string
 	jmp $
+
+
+%include "./src/print.asm"
 
 ; String Messages	
 STR_BOOTING: db '[*] Loading Disk', 0x0A, 0x0D, 0
