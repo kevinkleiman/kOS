@@ -1,59 +1,64 @@
-; Set boot sector origin memory address
-org 0x7C00
+; Set boot sector origin address
+[org 0x7C00]
 
-mov si, STR_BOOTING
-call print_string
+BOOT_DISK: db 0
+mov [BOOT_DISK], dl
 
-mov bp, 0x8000
-mov sp, bp
+CODE_SEGMENT equ gdt_code - gdt_start   ; set code segment
+DATA_SEGMENT equ gdt_data - gdt_start   ; set data segment
 
-mov bx, 0x9000
-mov dh, 2
-call load_disk
+cli                                     ; clear interrupts, no more 16 bit real mode :(
+lgdt [gdt_descriptor]
+mov eax, cr0
+or eax, 1
+mov cr0, eax
+jmp CODE_SEGMENT:start_protected_mode   ; far jump
 
-mov si, [0x9000 + 500]
-call print_string
-
-; Infinite Loop
 jmp $
 
-; Read from disk
-load_disk:
-	pusha
-	push dx
-	
-	mov ah, 0x02
-	mov al, dh
-	mov cl, 0x02
-	mov ch, 0x00
-	mov dh, 0x00
-	int 0x13
-	jc disk_error	
-	
-	pop dx 
-	cmp al, dh
-	jne disk_error
-	mov si, STR_DISK_SUCCESS
-	call print_string
-	popa
-	ret
+; Setup GDT
+gdt_start:
+    gdt_null:       ; null descriptor
+        dd 0x0
+        dd 0x0
 
-; Print Error if disk sector not loaded
-disk_error:
-	mov si, STR_DISK_ERROR
-	call print_string
-	jmp $
+    gdt_code:       ; code descriptor
+        dw 0xffff
+        dw 0x0
+        db 0x0
+        db 0b10011010
+        db 0b11001111
+        db 0x0
+
+    gdt_data:       ; data descriptor
+        dw 0xffff
+        dw 0x0
+        db 0x0
+        db 0b10010010
+        db 0b11001111
+        db 0x0
+
+gdt_end:
+
+gdt_descriptor:
+    dw gdt_end - gdt_start - 1
+    dd gdt_start
 
 
-%include "./src/print.asm"
+[bits 32]
+start_protected_mode:
+    mov ax, DATA_SEGMENT
+    mov ds, ax
+    mov ss, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
 
-; String Messages	
-STR_BOOTING: db '[*] Loading Disk', 0x0A, 0x0D, 0
-STR_DISK_ERROR: db '[!] Error Loading Disk...', 0x0A, 0x0D, 0
-STR_DISK_SUCCESS: db '[*] Successfully Loaded Disk!', 0x0A, 0x0D, 0
-STR_KERNEL_LOAD: db '[*] Loading Kernel From Disk...', 0x0A, 0x0D, 0
+    mov al, 'H'
+    mov ah, 0x0f
+    mov [0xb8000], ax    ; write to vid mem directly
+    jmp $
 
 ; Padding and Magic number
 times 510-($-$$) db 0
-dw 0xAA55
-
+dw 0xAA55       ; magic number
