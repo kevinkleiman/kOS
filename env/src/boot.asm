@@ -1,8 +1,27 @@
 ; Set boot sector origin address
 [org 0x7C00]
 
+KERNEL_LOC equ 0x1000
+
 BOOT_DISK: db 0
 mov [BOOT_DISK], dl
+
+
+xor ax, ax
+mov es, ax
+mov ds, ax
+mov bp, 0x8000
+mov sp, bp
+
+mov bx, KERNEL_LOC
+mov dh, 2
+
+call load_disk
+
+mov ah, 0x0
+mov al, 0x3
+int 0x10
+
 
 CODE_SEGMENT equ gdt_code - gdt_start   ; set code segment
 DATA_SEGMENT equ gdt_data - gdt_start   ; set data segment
@@ -15,6 +34,8 @@ mov cr0, eax
 jmp CODE_SEGMENT:start_protected_mode   ; far jump
 
 jmp $
+
+%include "./src/read_disk.asm"
 
 ; Setup GDT
 gdt_start:
