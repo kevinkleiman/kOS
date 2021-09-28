@@ -1,5 +1,5 @@
 # k-os
-A chaotic lightweight operating system made for learning!
+A chaotic lightweight operating system easy to get started, and made for learning!
 
 ## Prerequisites
 - `Docker` is installed
