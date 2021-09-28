@@ -1,11 +1,10 @@
 ; Set boot sector origin address
 [org 0x7C00]
 
-KERNEL_LOC equ 0x1000
+KERNEL_LOC equ 0x1000       ; set kernel location
 
 BOOT_DISK: db 0
 mov [BOOT_DISK], dl
-
 
 xor ax, ax
 mov es, ax
@@ -20,14 +19,14 @@ call load_disk
 
 mov ah, 0x0
 mov al, 0x3
-int 0x10
+int 0x10        ; clear screen with text mode
 
 
 CODE_SEGMENT equ gdt_code - gdt_start   ; set code segment
 DATA_SEGMENT equ gdt_data - gdt_start   ; set data segment
 
 cli                                     ; clear interrupts, no more 16 bit real mode :(
-lgdt [gdt_descriptor]
+lgdt [gdt_descriptor]                   ; load GDT!
 mov eax, cr0
 or eax, 1
 mov cr0, eax
@@ -66,6 +65,7 @@ gdt_descriptor:
     dd gdt_start
 
 
+; 32 bit protected mode
 [bits 32]
 start_protected_mode:
     mov ax, DATA_SEGMENT
@@ -75,10 +75,10 @@ start_protected_mode:
     mov fs, ax
     mov gs, ax
 
-    mov al, 'H'
-    mov ah, 0x0f
-    mov [0xb8000], ax    ; write to vid mem directly
-    jmp $
+    mov ebp, 0x90000    ; base pointer
+    mov esp, ebp        ; stack pointer
+
+    jmp KERNEL_LOC      ; jump to kernel!!
 
 ; Padding and Magic number
 times 510-($-$$) db 0
