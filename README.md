@@ -1,5 +1,5 @@
 # k-os
-A chaotic lightweight operating system made for learning
+A chaotic lightweight operating system made for learning!
 
 ## Prerequisites
 - `Docker` is installed
@@ -7,7 +7,7 @@ A chaotic lightweight operating system made for learning
 
 ## To get started
 1. Run `make docker-build`
-  - This will set up the docker development environment used for compiling and building our OS
+  - This will set up the dockerized development environment used for compiling and building our OS
 
 2. Exec into the development container with `docker exec -u root -ti os-dev-env /bin/bash` **Works with powershell only for some reason??!!**
   - This allows us to start working within our dockerized development environment
