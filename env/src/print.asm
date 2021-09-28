@@ -1,8 +1,8 @@
-; Print Strings to screen using BIOS interrupt 0x10
+; Contains code for printing strings in 16-bit real mode
 print_string:
 	pusha
 	str_loop:
-		mov al, [si]
+		mov al, [si]    ; use si register to hold string
 		cmp al, 0
 		jne print_char
 		popa
@@ -10,6 +10,6 @@ print_string:
 
 	print_char:
 		mov ah, 0x0E
-		int 0x10
+		int 0x10        ; using BIOS interrupt 0x10 to display character
 		add si, 1
 		jmp str_loop

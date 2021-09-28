@@ -5,4 +5,4 @@ build:
 rm:
 	docker compose down
 run:
-	qemu-system-x86_64.exe -fda ./env/bin/$(BUILD_TARGET).bin
+	qemu-system-x86_64.exe -drive format=raw,file=./env/bin/kos.bin,index=0,if=floppy, -m 128M
