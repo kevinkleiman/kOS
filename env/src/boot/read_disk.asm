@@ -24,6 +24,6 @@ disk_error:
     call print_string
 	jmp $
 
-%include "./src/print.asm"
+%include "./src/boot/print.asm"
 
 DISK_ERROR_MSG: db "Error Reading from disk...", 0

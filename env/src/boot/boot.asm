@@ -34,7 +34,7 @@ jmp CODE_SEGMENT:start_protected_mode   ; far jump
 
 jmp $
 
-%include "./src/read_disk.asm"
+%include "./src/boot/read_disk.asm"
 
 ; Setup GDT
 gdt_start:
