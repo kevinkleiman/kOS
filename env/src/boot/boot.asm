@@ -17,10 +17,15 @@ mov dh, 2
 
 call load_disk
 
+; Set up palette and text mode
 mov ah, 0x0
 mov al, 0x3
 int 0x10        ; clear screen with text mode
 
+mov ah, 0x0B    ; change background color to blue
+mov bh, 0x00
+mov bl, 0x01
+int 0x10
 
 CODE_SEGMENT equ gdt_code - gdt_start   ; set code segment
 DATA_SEGMENT equ gdt_data - gdt_start   ; set data segment
