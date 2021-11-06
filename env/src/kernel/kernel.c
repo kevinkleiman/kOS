@@ -4,7 +4,7 @@ void main()
 {
     /*
      * A quick and dirty example of writing directly to
-     * video memory to display text
+     * video memory to display text... obviously very stupid pls fix
      */
     unsigned char *vid_mem = VGA_MEM;
     *vid_mem = 'K';

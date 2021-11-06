@@ -7,4 +7,4 @@ docker-build:
 docker-clean:
 	docker compose down
 run:
-	qemu-system-x86_64.exe -drive format=raw,file=./env/bin/kos.bin,index=0,if=floppy, -m 128M
+	qemu-system-x86_64 -drive format=raw,file=./env/bin/kos.bin,index=0,if=floppy, -m 128M
