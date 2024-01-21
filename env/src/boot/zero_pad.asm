@@ -1,1 +1,0 @@
-times 10240 db 0 ; prevents virtual disk issues with qemu
