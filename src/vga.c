@@ -1,19 +1,30 @@
+#include "vga.h"
 
-enum vga_color {
-	VGA_COLOR_BLACK = 0,
-	VGA_COLOR_BLUE = 1,
-	VGA_COLOR_GREEN = 2,
-	VGA_COLOR_CYAN = 3,
-	VGA_COLOR_RED = 4,
-	VGA_COLOR_MAGENTA = 5,
-	VGA_COLOR_BROWN = 6,
-	VGA_COLOR_LIGHT_GREY = 7,
-	VGA_COLOR_DARK_GREY = 8,
-	VGA_COLOR_LIGHT_BLUE = 9,
-	VGA_COLOR_LIGHT_GREEN = 10,
-	VGA_COLOR_LIGHT_CYAN = 11,
-	VGA_COLOR_LIGHT_RED = 12,
-	VGA_COLOR_LIGHT_MAGENTA = 13,
-	VGA_COLOR_LIGHT_BROWN = 14,
-	VGA_COLOR_WHITE = 15,
-};
+uint16_t g_vga_color;
+
+void set_vga_color(enum vga_color fg, enum vga_color bg) {
+    g_vga_color = vga_entry_color(fg, bg);
+}
+
+void vga_init() {
+    clear();
+}
+
+void putc(char c, size_t row, size_t col) {
+    uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
+    
+    const size_t index = row * VGA_WIDTH + col;
+    vga_buffer[index] = vga_entry(c, g_vga_color);
+}
+
+void clear() {
+    uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
+
+    for (size_t i = 0; i < VGA_HEIGHT; ++i) {
+        for (size_t j = 0; j < VGA_WIDTH; ++j) {
+            const uint16_t index = i * VGA_WIDTH + j;
+
+            vga_buffer[index] = vga_entry(' ', g_vga_color);
+        }
+    }
+}

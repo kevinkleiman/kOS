@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include "tty.h"
  
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -14,4 +15,6 @@
  
 void kernel_main(void) 
 {
+    tty_init();
+    tty_write("Welcome to kOS!");
 }
