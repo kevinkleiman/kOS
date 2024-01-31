@@ -1,8 +1,23 @@
+#include <stdbool.h>
 #include "stdio.h"
 
-void printf(const char* str, void* fmt) {
+char* itoa(unsigned int i, char* buffer, int base) {
+    bool negative_flag; 
+    int index;
 
+    if (i == 0) {
+        buffer[index++] = '0';
+        buffer[index] = '\0';
+    }
+    if (i < 0 && base == 10) {
+        negative_flag = true;
+        i = -i;
+    }
+
+    return 0;
 }
+
+void printf(const char* fmt, ...) {}
 
 void* memset(void* dest, register int data, register size_t length) {
     // Cast destination pointer to char pointer to dereference later
