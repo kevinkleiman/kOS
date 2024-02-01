@@ -1,9 +1,9 @@
 #include "gdt.h"
 
-GDT_Entry gdt_entries[GDT_ENTRIES];
-GDT_Ptr gdt_ptr;
+gdt_entry_t gdt_entries[GDT_ENTRIES];
+gdtr_t gdt_ptr;
 
-extern void load_gdt(GDT_Ptr*);
+extern void load_gdt(gdtr_t*);
 
 void gdt_init() {
     gdt_ptr.limit = (sizeof(gdt_entries) * GDT_ENTRIES) - 1;

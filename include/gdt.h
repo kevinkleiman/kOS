@@ -28,12 +28,12 @@ typedef struct {
     uint8_t     access;
     uint8_t     flags;
     uint8_t     base_high;
-} __attribute__((packed)) GDT_Entry;
+} __attribute__((packed)) gdt_entry_t;
 
 typedef struct {
     uint16_t    limit;
-    GDT_Entry*   base;
-} __attribute__((packed)) GDT_Ptr;
+    gdt_entry_t*   base;
+} __attribute__((packed)) gdtr_t;
 
 void gdt_init();
 void set_gdt_entry(uint32_t index, uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity);
