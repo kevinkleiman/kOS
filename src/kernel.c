@@ -14,10 +14,9 @@ void kernel_main(void)
     tty_init();
     gdt_init(); 
     idt_init();
-    // keyboard_init();
+    keyboard_init();
 
     tty_write("Welcome to kOS!\n");
 
-    __asm__ __volatile__("int $0");
-    // __asm__ __volatile__("int $3");
+    __asm__ __volatile__("int $33");
 }

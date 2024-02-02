@@ -120,6 +120,8 @@ void idt_init() {
     idt_set_gate(47, (uint32_t) irq15);
 
     load_idt(&idtr);
+
+    tty_write("IDT Loaded.\n");
 }
 
 void register_interrupt_handler(uint8_t index, isr_t handler) {
@@ -137,7 +139,6 @@ void isr_handler(i_register_t registers) {
 }
 
 void irq_handler(i_register_t registers) {
-    tty_write("\nIRQ");
     if (registers.int_no >= 40) outb(PIC_DATA_PORT_SLAVE, 0x20);
     outb(PIC_CMD_PORT_MASTER, 0x20);
 

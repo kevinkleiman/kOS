@@ -27,7 +27,7 @@ global load_idt
 
     irq%1:
         cli
-        push long 0
+        push long %1
         push long (32 + %1)
         jmp irq_common_stub
 %endmacro
@@ -58,6 +58,7 @@ isr_common_stub:
 	mov es, ax
 	mov fs, ax
 	mov gs, ax
+
 	popa
 	add esp, 8 ; Cleans up the pushed error code and pushed ISR number
 	sti
@@ -73,8 +74,8 @@ irq_common_stub:
     mov fs, ax
     mov gs, ax
 
-    call irq_handler
-    pop ebx
+    call irq_handler ; Different than the ISR code
+    pop ebx  ; Different than the ISR code
 
     mov ds, bx
     mov es, bx
