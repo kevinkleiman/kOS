@@ -51,33 +51,18 @@ typedef struct {
 } __attribute__((packed)) idtr_t;
 
 typedef struct {
-    uint32_t    cr2;
-    uint32_t    ds;
-    uint32_t    edi;
-    uint32_t    esi;
-    uint32_t    ebp;
-    uint32_t    esp;
-    uint32_t    ebx;
-    uint32_t    edx;
-    uint32_t    ecx;
-    uint32_t    eax;
-    uint32_t    int_no;
-    uint32_t    err_code;
-    uint32_t    eip;
-    uint32_t    csm;
-    uint32_t    eflags;
-    uint32_t    useresp;
-    uint32_t    ss;
-} __attribute__((packed)) irt_register_t;
+   uint32_t ds;
+   uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
+   uint32_t int_no, err_code;
+   uint32_t eip, cs, eflags, useresp, ss;
+} i_register_t;
 
-typedef void (*isr_t)(irt_register_t*);
+typedef void (*isr_t)(i_register_t);
 
 void idt_init();
 void idt_set_gate(uint8_t index, uint32_t handler);
 void register_interrupt_handler(uint8_t index, isr_t handler);
-void isr_handler(irt_register_t* irt_register);
-
-__attribute__((noreturn)) void kpanic();
+void isr_handler(i_register_t irt_register);
 
 /* ISRs */
 extern void isr0();

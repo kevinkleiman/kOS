@@ -11,12 +11,13 @@
  
 void kernel_main(void) 
 {
+    tty_init();
     gdt_init(); 
     idt_init();
-    tty_init();
-    keyboard_init();
+    // keyboard_init();
 
     tty_write("Welcome to kOS!\n");
 
-    uint8_t test = 1/0;
+    __asm__ __volatile__("int $0");
+    // __asm__ __volatile__("int $3");
 }

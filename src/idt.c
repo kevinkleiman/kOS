@@ -64,8 +64,8 @@ void pic_init() {
 }
 
 void idt_init() {
-    idtr.limit = (uint16_t) (sizeof(idt) * 256) - 1;
-    idtr.base = (uintptr_t) &idt;
+    idtr.limit = (sizeof(idt) * 256) - 1;
+    idtr.base = (uint32_t) &idt;
 
     pic_init();
 
@@ -126,22 +126,23 @@ void register_interrupt_handler(uint8_t index, isr_t handler) {
     interrupt_handlers[index] = handler;
 }
 
-void isr_handler(irt_register_t* registers) {
-    if (registers->int_no < 32) {
+void isr_handler(i_register_t registers) {
+    if (registers.int_no < 32) {
         tty_write("\nKERNEL PANIC! ");
-        tty_write(exception_messages[registers->int_no]);
+        tty_write(exception_messages[registers.int_no]);
             
         // hang
         for (;;);
     }
 }
 
-void irq_handler(irt_register_t* registers) {
-    if (registers->int_no >= 40) outb(PIC_DATA_PORT_SLAVE, 0x20);
+void irq_handler(i_register_t registers) {
+    tty_write("\nIRQ");
+    if (registers.int_no >= 40) outb(PIC_DATA_PORT_SLAVE, 0x20);
     outb(PIC_CMD_PORT_MASTER, 0x20);
 
-    if (interrupt_handlers[registers->int_no] != 0) {
-        isr_t handler = interrupt_handlers[registers->int_no];
+    if (interrupt_handlers[registers.int_no] != 0) {
+        isr_t handler = interrupt_handlers[registers.int_no];
         handler(registers);
     }
 }
@@ -152,9 +153,5 @@ void idt_set_gate(uint8_t index, uint32_t handler) {
     idt[index].reserved = 0;
     idt[index].attributes = INTERRUPT_GATE;
     idt[index].isr_high = (handler >> 16) & 0xFFFF;
-}
-
-__attribute__((noreturn)) void kpanic() {
-    __asm__ __volatile__( "cli; hlt" );
 }
 
