@@ -16,6 +16,7 @@ KERNELTARGET := kos.bin
 default:
 		$(CC)-as $(BOOTDIR)/boot.s -o $(OBJECTDIR)/boot.o
 		nasm -f elf32 $(ASMDIR)/__gdt.S -o $(OBJECTDIR)/__gdt.o
+		nasm -f elf32 $(ASMDIR)/__idt.S -o $(OBJECTDIR)/__idt.o
 		$(CC)-gcc -I $(INCLUDEDIR) -c $(CTARGETS) -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 		mv ./*.o $(OBJECTDIR)
 		$(CC)-gcc -T linker.ld -o $(OBJECTDIR)/$(KERNELTARGET) -ffreestanding -O2 -nostdlib $(OBJECTS) -lgcc

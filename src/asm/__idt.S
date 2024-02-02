@@ -1,32 +1,35 @@
 global load_idt
 
 extern isr_handler
-
-%macro panic %1
-    cli
-    push long %1
-    jmp isr_common_stub
-%endmacro
-
-%macro nopanic
-    cli
-    push long 0
-    push long %1
-    jmp isr_common_stub
-%endmacro
+extern irq_handler
 
 %macro ISR_NO_ERR 1
-    global isr_no_err_%1
+    global isr%1
 
-    isr_no_err_%1:
-        nopanic
+    isr%1:
+        cli
+        push long 0
+        push long %1
+        jmp isr_common_stub
 %endmacro
 
 %macro ISR_ERR 1
-    global isr_no_err_%1
+    global isr%1
 
-    isr_no_err_%1:
-        panic
+    isr%1:
+        cli
+        push long %1
+        jmp isr_common_stub
+%endmacro
+
+%macro IRQ 1
+    global irq%1
+
+    irq%1:
+        cli
+        push long 0
+        push long (32 + %1)
+        jmp irq_common_stub
 %endmacro
 
 load_idt:
@@ -57,6 +60,26 @@ isr_common_stub:
     sti
     iret
 
+irq_common_stub:
+    pusha 
+    mov ax, ds
+    push eax
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    call irq_handler
+    pop ebx
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
+    popa
+    add esp, 8
+    sti
+    iret 
+
 ISR_NO_ERR 0
 ISR_NO_ERR 1
 ISR_NO_ERR 2
@@ -83,6 +106,7 @@ ISR_NO_ERR 22
 ISR_NO_ERR 23
 ISR_NO_ERR 24
 ISR_NO_ERR 25
+ISR_NO_ERR 26
 ISR_NO_ERR 27
 ISR_NO_ERR 28
 ISR_NO_ERR 29
@@ -90,3 +114,20 @@ ISR_NO_ERR 30
 ISR_NO_ERR 31
 ISR_NO_ERR 128
 ISR_NO_ERR 177
+
+IRQ 0
+IRQ 1
+IRQ 2
+IRQ 3
+IRQ 4
+IRQ 5
+IRQ 6
+IRQ 7
+IRQ 8
+IRQ 9
+IRQ 10
+IRQ 11
+IRQ 12
+IRQ 13
+IRQ 14
+IRQ 15
