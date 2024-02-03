@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #define INTERRUPT_GATE 0x8E
 #define TRAP_GATE 0x8F
@@ -55,14 +56,25 @@ typedef struct {
    uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
    uint32_t int_no, err_code;
    uint32_t eip, cs, eflags, useresp, ss;
-} i_register_t;
+} __attribute__((packed)) i_register_t;
 
 typedef void (*isr_t)(i_register_t);
 
+/* Function definitions for idt setup and interrupts */
 void idt_init();
 void idt_set_gate(uint8_t index, uint32_t handler);
 void register_interrupt_handler(uint8_t index, isr_t handler);
 void isr_handler(i_register_t irt_register);
+
+
+/* Checks whether interrupts are enabled */
+static inline bool are_interrupts_enabled() {
+    unsigned long flags;
+    asm volatile ( "pushf\n\t"
+                   "pop %0"
+                   : "=g"(flags) );
+    return flags & (1 << 9);
+}
 
 /* ISRs */
 extern void isr0();

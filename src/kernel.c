@@ -16,7 +16,8 @@ void kernel_main(void)
     idt_init();
     keyboard_init();
 
-    tty_write("Welcome to kOS!\n");
+    tty_write("\nWelcome to kOS!\n");
 
-    __asm__ __volatile__("int $33");
+    if(are_interrupts_enabled()) tty_write("Enabled\n");
+    else tty_write("Not enabled\n");
 }

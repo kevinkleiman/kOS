@@ -3,6 +3,11 @@
 #include <stddef.h>
 #include "vga.h"
 
+#define BOOT_LOG(msg) \
+    tty_write("[BOOT] "); \
+    tty_write(msg); \
+    tty_write("\n");
+
 typedef struct {
     size_t tty_row;
     size_t tty_col;

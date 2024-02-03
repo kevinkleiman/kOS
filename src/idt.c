@@ -59,15 +59,13 @@ void pic_init() {
     outb(PIC_DATA_PORT_MASTER, 0x01);
     outb(PIC_DATA_PORT_SLAVE, 0x01);
 
-    outb(PIC_DATA_PORT_MASTER, 0x0);
-    outb(PIC_DATA_PORT_SLAVE, 0x0);
+    outb(PIC_DATA_PORT_MASTER, 0xFD);
+    outb(PIC_DATA_PORT_SLAVE, 0xFF);
 }
 
 void idt_init() {
-    idtr.limit = (sizeof(idt) * 256) - 1;
+    idtr.limit = (uint16_t) (sizeof(idt) * 256) - 1;
     idtr.base = (uint32_t) &idt;
-
-    pic_init();
 
     idt_set_gate(0, (uint32_t) isr0);
     idt_set_gate(1, (uint32_t) isr1);
@@ -120,8 +118,9 @@ void idt_init() {
     idt_set_gate(47, (uint32_t) irq15);
 
     load_idt(&idtr);
+    pic_init();
 
-    tty_write("IDT Loaded.\n");
+    BOOT_LOG("IDT Loaded.")
 }
 
 void register_interrupt_handler(uint8_t index, isr_t handler) {
@@ -139,13 +138,13 @@ void isr_handler(i_register_t registers) {
 }
 
 void irq_handler(i_register_t registers) {
-    if (registers.int_no >= 40) outb(PIC_DATA_PORT_SLAVE, 0x20);
-    outb(PIC_CMD_PORT_MASTER, 0x20);
-
     if (interrupt_handlers[registers.int_no] != 0) {
         isr_t handler = interrupt_handlers[registers.int_no];
         handler(registers);
     }
+
+    if (registers.int_no >= 40) outb(PIC_CMD_PORT_SLAVE, 0x20);
+    outb(PIC_CMD_PORT_MASTER, 0x20);
 }
 
 void idt_set_gate(uint8_t index, uint32_t handler) {

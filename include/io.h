@@ -5,7 +5,7 @@
 static inline uint8_t inb(uint16_t port) {
     uint8_t ret;
 
-    __asm__ __volatile__( "inb %0, %1" : "=a"(ret) : "Nd"(port) : "memory" );
+    __asm__ __volatile__( "inb %w1, %b0" : "=a"(ret) : "Nd"(port) : "memory" );
 
     return ret;
 }

@@ -1,4 +1,5 @@
 #include "gdt.h"
+#include "tty.h"
 
 gdt_entry_t gdt_entries[GDT_ENTRIES];
 gdtr_t gdt_ptr;
@@ -12,10 +13,12 @@ void gdt_init() {
     set_gdt_entry(0, 0, 0, 0, 0);
     set_gdt_entry(1, 0, GDT_HIGH_LIMIT, GDT_KERNEL_CODE, GDT_KERNEL_GRANULARITY);
     set_gdt_entry(2, 0, GDT_HIGH_LIMIT, GDT_KERNEL_DATA, GDT_KERNEL_GRANULARITY);
-    set_gdt_entry(3, 0, GDT_HIGH_LIMIT, GDT_USER_CODE, GDT_KERNEL_GRANULARITY);
-    set_gdt_entry(4, 0, GDT_HIGH_LIMIT, GDT_USER_DATA, GDT_KERNEL_GRANULARITY);
+    set_gdt_entry(3, 0, GDT_HIGH_LIMIT, 0x03, GDT_KERNEL_GRANULARITY);
+    set_gdt_entry(4, 0, GDT_HIGH_LIMIT, 0x03, GDT_KERNEL_GRANULARITY);
 
     load_gdt(&gdt_ptr);
+
+    BOOT_LOG("GDT Loaded.")
 }
 
 void set_gdt_entry(uint32_t index, uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity) {
