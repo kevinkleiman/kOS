@@ -68,12 +68,13 @@ void isr_handler(i_register_t irt_register);
 
 
 /* Checks whether interrupts are enabled */
-static inline bool are_interrupts_enabled() 
+static inline bool check_interrupts_enabled() 
 {
     unsigned long flags;
-    asm volatile ( "pushf\n\t"
-                   "pop %0"
-                   : "=g"(flags) );
+
+    __asm__ __volatile__ ( "pushf\n\t"
+                           "pop %0"
+                           : "=g"(flags) );
     return flags & (1 << 9);
 }
 

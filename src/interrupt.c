@@ -1,7 +1,6 @@
-#include "idt.h"
+#include "interrupt.h"
 #include "io.h"
 #include "tty.h"
-#include "stdio.h"
 
 __attribute__((aligned(0x10))) static idt_entry_t idt[256];
 
@@ -70,8 +69,6 @@ void idt_init() {
     idtr.limit = (uint16_t) (sizeof(idt) * 256) - 1;
     idtr.base = (uint32_t) &idt;
 
-    memset(&interrupt_handlers, 0, sizeof(isr_t) * 256);
-
     idt_set_gate(0, (uint32_t) isr0);
     idt_set_gate(1, (uint32_t) isr1);
     idt_set_gate(2, (uint32_t) isr2);
@@ -130,7 +127,7 @@ void idt_init() {
 
     BOOT_LOG("IDT Loaded.")
 
-    if (are_interrupts_enabled()) {
+    if (check_interrupts_enabled()) {
         BOOT_LOG("Interrupt enable checks passed.")
     } 
     else {
