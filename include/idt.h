@@ -68,7 +68,8 @@ void isr_handler(i_register_t irt_register);
 
 
 /* Checks whether interrupts are enabled */
-static inline bool are_interrupts_enabled() {
+static inline bool are_interrupts_enabled() 
+{
     unsigned long flags;
     asm volatile ( "pushf\n\t"
                    "pop %0"
@@ -109,6 +110,8 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
+extern void isr128();
+extern void isr177();
 
 /* IRQs */
 extern void irq0();

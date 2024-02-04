@@ -4,7 +4,7 @@
 
 static void keyboard_callback(i_register_t registers) {
     unsigned char key = inb(0x60);
-    tty_write("Key pressed!\n");
+    tty_write("K");
 }
 
 void keyboard_init() {

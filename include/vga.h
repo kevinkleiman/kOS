@@ -9,7 +9,7 @@
 #define VGA_WIDTH 80
 
 /* Hardware text mode color constants */
-enum vga_color {
+typedef enum {
 	VGA_COLOR_BLACK = 0,
 	VGA_COLOR_BLUE = 1,
 	VGA_COLOR_GREEN = 2,
@@ -26,9 +26,9 @@ enum vga_color {
 	VGA_COLOR_LIGHT_MAGENTA = 13,
 	VGA_COLOR_LIGHT_BROWN = 14,
 	VGA_COLOR_WHITE = 15,
-};
+} vga_color_t;
 
-static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) 
+static inline uint8_t vga_entry_color(vga_color_t fg, vga_color_t bg) 
 {
 	return fg | bg << 4;
 }
@@ -38,7 +38,7 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color)
 	return (uint16_t) uc | (uint16_t) color << 8;
 }
 
-void set_vga_color(enum vga_color fg, enum vga_color bg);
+void vga_setcolor(vga_color_t fg, vga_color_t bg);
 void vga_init();
-void putc(char c, size_t row, size_t col);
-void clear();
+void vga_putc(char c, size_t row, size_t col);
+void vga_clear();

@@ -10,6 +10,10 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
-static inline void outb(uint8_t byte, uint16_t port) {
+static inline void outb(uint16_t port, uint8_t byte) {
     __asm__ __volatile__( "outb %0, %1" : : "a"(byte), "Nd"(port) : "memory" );
+}
+
+static inline void hlt() {
+    __asm__ __volatile__( "hlt" );
 }

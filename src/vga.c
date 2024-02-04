@@ -2,22 +2,22 @@
 
 uint16_t g_vga_color;
 
-void set_vga_color(enum vga_color fg, enum vga_color bg) {
+void vga_setcolor(vga_color_t fg, vga_color_t bg) {
     g_vga_color = vga_entry_color(fg, bg);
 }
 
 void vga_init() {
-    clear();
+    vga_clear();
 }
 
-void putc(char c, size_t row, size_t col) {
+void vga_putc(char c, size_t row, size_t col) {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
     
     const size_t index = row * VGA_WIDTH + col;
     vga_buffer[index] = vga_entry(c, g_vga_color);
 }
 
-void clear() {
+void vga_clear() {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
 
     for (size_t i = 0; i < VGA_HEIGHT; ++i) {

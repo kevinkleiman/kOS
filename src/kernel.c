@@ -4,7 +4,6 @@
 #include "idt.h"
 #include "keyboard.h"
  
-/* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
 #endif
@@ -16,8 +15,7 @@ void kernel_main(void)
     idt_init();
     keyboard_init();
 
-    tty_write("\nWelcome to kOS!\n");
+    tty_welcome();
 
-    if(are_interrupts_enabled()) tty_write("Enabled\n");
-    else tty_write("Not enabled\n");
+    for(;;);
 }

@@ -9,14 +9,16 @@
     tty_write("\n");
 
 typedef struct {
-    size_t tty_row;
-    size_t tty_col;
+    size_t      row;
+    size_t      col;
 
-    enum vga_color tty_fg_color;
-    enum vga_color tty_bg_color;
+    vga_color_t fgcolor;
+    vga_color_t bgcolor;
 } tty_state_t;
 
 void tty_init();
 void tty_write(const char* str);
 void tty_putc(char c);
-void tty_set_color(enum vga_color color);
+void tty_clear();
+void tty_setcolor(vga_color_t fg, vga_color_t bg);
+void tty_welcome();

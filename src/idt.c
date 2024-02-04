@@ -1,6 +1,7 @@
 #include "idt.h"
 #include "io.h"
 #include "tty.h"
+#include "stdio.h"
 
 __attribute__((aligned(0x10))) static idt_entry_t idt[256];
 
@@ -59,13 +60,17 @@ void pic_init() {
     outb(PIC_DATA_PORT_MASTER, 0x01);
     outb(PIC_DATA_PORT_SLAVE, 0x01);
 
-    outb(PIC_DATA_PORT_MASTER, 0xFD);
+    outb(PIC_DATA_PORT_MASTER, 0xFF);
     outb(PIC_DATA_PORT_SLAVE, 0xFF);
+
+    outb(PIC_DATA_PORT_MASTER, 0xFD);
 }
 
 void idt_init() {
     idtr.limit = (uint16_t) (sizeof(idt) * 256) - 1;
     idtr.base = (uint32_t) &idt;
+
+    memset(&interrupt_handlers, 0, sizeof(isr_t) * 256);
 
     idt_set_gate(0, (uint32_t) isr0);
     idt_set_gate(1, (uint32_t) isr1);
@@ -99,6 +104,10 @@ void idt_init() {
     idt_set_gate(29, (uint32_t) isr29);
     idt_set_gate(30, (uint32_t) isr30);
     idt_set_gate(31, (uint32_t) isr31);
+    idt_set_gate(128, (uint32_t) isr128);
+    idt_set_gate(177, (uint32_t) isr177);
+
+    pic_init();
 
     idt_set_gate(32, (uint32_t) irq0);
     idt_set_gate(33, (uint32_t) irq1);
@@ -118,9 +127,16 @@ void idt_init() {
     idt_set_gate(47, (uint32_t) irq15);
 
     load_idt(&idtr);
-    pic_init();
 
     BOOT_LOG("IDT Loaded.")
+
+    if (are_interrupts_enabled()) {
+        BOOT_LOG("Interrupt enable checks passed.")
+    } 
+    else {
+        BOOT_LOG("Interrupt enable checks failed!")
+        hlt();
+    }
 }
 
 void register_interrupt_handler(uint8_t index, isr_t handler) {
