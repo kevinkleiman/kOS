@@ -32,7 +32,7 @@ typedef struct {
 
 typedef struct {
     uint16_t    limit;
-    gdt_entry_t*   base;
+    gdt_entry_t* base;
 } __attribute__((packed)) gdtr_t;
 
 void gdt_init();

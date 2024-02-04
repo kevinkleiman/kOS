@@ -2,7 +2,7 @@
 #include "tty.h"
 #include "io.h"
 
-static void keyboard_callback(i_register_t registers) {
+void keyboard_callback(__attribute__((unused)) i_register_t registers) {
     unsigned char key = inb(0x60);
     tty_write("K");
 }

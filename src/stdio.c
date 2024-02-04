@@ -1,9 +1,9 @@
 #include <stdbool.h>
 #include "stdio.h"
 
-char* itoa(unsigned int i, char* buffer, int base) {
+char* itoa(int i, char* buffer, int base) {
     bool negative_flag; 
-    int index;
+    int index = 0;
 
     if (i == 0) {
         buffer[index++] = '0';
@@ -14,7 +14,7 @@ char* itoa(unsigned int i, char* buffer, int base) {
         i = -i;
     }
 
-    return 0;
+    return "";
 }
 
 void printf(const char* fmt, ...) {}
