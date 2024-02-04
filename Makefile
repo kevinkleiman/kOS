@@ -2,13 +2,14 @@ BOOTDIR := ./multiboot
 OBJECTDIR := ./bin
 SRCDIR := ./src
 ASMDIR := $(SRCDIR)/asm
+DRIVERSDIR := $(SRCDIR)/drivers
 INCLUDEDIR := ./include
 
 CC := i686-elf
 EMU := qemu-system-i386
 
 OBJECTS := $(OBJECTDIR)/*.o
-CTARGETS := $(SRCDIR)/*.c
+CTARGETS := $(SRCDIR)/*.c $(DRIVERSDIR)/*.c
 ASMTARGETS := $(ASMDIR)/*.S
 
 KERNELTARGET := kos.bin
