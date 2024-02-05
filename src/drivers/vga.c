@@ -1,4 +1,5 @@
 #include "vga.h"
+#include "io.h"
 
 uint16_t g_vga_color;
 
@@ -27,4 +28,20 @@ void vga_clear() {
             vga_buffer[index] = vga_entry(' ', g_vga_color);
         }
     }
+}
+
+cursor_pos_t get_cursor_position() {
+    uint16_t pos = 0;
+    cursor_pos_t cursor_pos;
+
+    outb(0x3D4, 0x0F);
+    pos |= inb(0x3D5);
+
+    outb(0x3D4, 0x0E);
+    pos |= ((uint16_t)inb(0x3D5)) << 8;
+
+    cursor_pos.x = pos / VGA_WIDTH; 
+    cursor_pos.y = pos % VGA_WIDTH; 
+
+    return cursor_pos;
 }

@@ -28,6 +28,11 @@ typedef enum {
 	VGA_COLOR_WHITE = 15,
 } vga_color_t;
 
+typedef struct {
+    uint8_t x;
+    uint8_t y;
+} cursor_pos_t;
+
 static inline uint8_t vga_entry_color(vga_color_t fg, vga_color_t bg) 
 {
 	return fg | bg << 4;
@@ -42,3 +47,5 @@ void vga_setcolor(vga_color_t fg, vga_color_t bg);
 void vga_init();
 void vga_putc(char c, size_t row, size_t col);
 void vga_clear();
+
+cursor_pos_t get_cursor_position();

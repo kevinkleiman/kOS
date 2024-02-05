@@ -3,7 +3,7 @@
 #include "stdio.h"
 #include "tty.h"
 
-char * itoa(int value, char* str, int base) {
+char* itoa(int value, char* str, int base) {
     char* rc;
     char* ptr;
     char* low;
@@ -63,6 +63,9 @@ void printf(const char* fmt, ...) {
                 itoa(va_arg(ap, int), buffer, HEX);
                 tty_write("0x");
                 tty_write(buffer);
+                break;
+            case 'c':
+                tty_write(&c);
                 break;
             case '%':
                 tty_write("%");
