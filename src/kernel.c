@@ -18,8 +18,8 @@ void kernel_main(void)
     // print ascii art welcome message
     tty_welcome();
 
-    __asm__ __volatile__("movl $0, %eax; int $0x80");
-    __asm__ __volatile__("movl $1, %eax; int $0x80");
+    // __asm__ __volatile__("movl $0, %eax; int $0x80");
+    // __asm__ __volatile__("movl $1, %eax; int $0x80");
 
     // hang, technically uneccessary due to
     // the way this is handled in boot.S

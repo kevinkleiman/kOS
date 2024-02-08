@@ -16,7 +16,9 @@ static inline void outb(uint16_t port, uint8_t byte)
     __asm__ __volatile__( "outb %0, %1" : : "a"(byte), "Nd"(port) : "memory" );
 }
 
-static inline void hlt() 
+__attribute__((noreturn)) static void hlt() 
 {
     __asm__ __volatile__( "hlt" );
+
+    for(;;);
 }

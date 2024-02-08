@@ -9,3 +9,4 @@
 char* itoa(int value, char* str, int base);
 void printf(const char* fmt, ...);
 void* memset(void* dest, register int data, register size_t length);
+void panic(char* msg);

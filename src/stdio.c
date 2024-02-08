@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include "stdio.h"
+#include "io.h"
 #include "tty.h"
 
 char* itoa(int value, char* str, int base) 
@@ -8,6 +9,7 @@ char* itoa(int value, char* str, int base)
     char* rc;
     char* ptr;
     char* low;
+
     // Check for supported base.
     if (base < 2 || base > 36) {
         *str = '\0';
@@ -69,6 +71,9 @@ void printf(const char* fmt, ...)
             case 'c':
                 tty_write(&c);
                 break;
+            case 's':
+                tty_write(va_arg(ap, char*));
+                break;
             case '%':
                 tty_write("%");
                 break;
@@ -93,4 +98,14 @@ void* memset(void* dest, register int data, register size_t length)
 
     // Return destination pointer
     return dest;
+}
+
+__attribute__((noreturn)) void panic(char* msg)
+{
+    vga_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
+    // generic error handler
+    printf("Exception encountered! %s\n", msg);
+
+    // halt all execution
+    hlt();
 }

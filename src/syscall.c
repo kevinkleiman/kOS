@@ -51,6 +51,12 @@ __attribute__((naked)) void syscall_pop_regs()
 
 void syscall_callback(i_register_t registers) 
 {
+    // check that eax does not overflow max syscalls
+    if (registers.eax > (SYSCALL_MAX - 1)) {
+        panic("Invalid syscall.");
+    }
+
+    // lookup syscall from table and call
     syscall_entries[registers.eax]();
 }
 
