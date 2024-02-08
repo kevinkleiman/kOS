@@ -196,7 +196,7 @@ void idt_set_gate(uint8_t index, uint32_t handler)
     idt[index].isr_high = (handler >> 16) & 0xFFFF;
 
     if (index == 128) {
-        idt[index].attributes = INTERRUPT_GATE;
+        idt[index].attributes = INTERRUPT_USER_GATE;
     } else {
         idt[index].attributes = INTERRUPT_GATE;
     }
