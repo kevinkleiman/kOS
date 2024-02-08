@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #define INTERRUPT_GATE 0x8E
+#define INTERRUPT_USER_GATE 0xEE
 #define TRAP_GATE 0x8F
 #define TASK_GATE 0x85
 
@@ -131,5 +132,3 @@ extern void irq12();
 extern void irq13();
 extern void irq14();
 extern void irq15();
-
-

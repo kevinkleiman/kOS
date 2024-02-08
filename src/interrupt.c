@@ -1,13 +1,15 @@
 #include "interrupt.h"
 #include "io.h"
 #include "tty.h"
+#include "vga.h"
 
 __attribute__((aligned(0x10))) static idt_entry_t idt[256];
 
 static idtr_t idtr;
 static isr_t interrupt_handlers[256];
 
-const char* exception_messages[] = {
+// string value of exceptions from a given ISR
+static const char* exception_messages[] = {
     "Division By Zero",
     "Debug",
     "Non Maskable Interrupt",
@@ -44,12 +46,13 @@ const char* exception_messages[] = {
 
 extern void load_idt(idtr_t*);
 
-void pic_init() {
-    // Setup master and slave PIC
+void pic_init() 
+{
+    // setup master and slave PIC
     outb(PIC_CMD_PORT_MASTER, 0x11);
     outb(PIC_CMD_PORT_SLAVE, 0x11);
 
-    // Setup vector offsets
+    // setup vector offsets
     outb(PIC_DATA_PORT_MASTER, 0x20);
     outb(PIC_DATA_PORT_SLAVE, 0x28);
 
@@ -65,10 +68,13 @@ void pic_init() {
     outb(PIC_DATA_PORT_MASTER, 0xFD);
 }
 
-void idt_init() {
+void idt_init() 
+{
+    // setup idt register data structure
     idtr.limit = (uint16_t) (sizeof(idt) * 256) - 1;
     idtr.base = (uint32_t) &idt;
 
+    // setup ISR exception gates + syscalls
     idt_set_gate(0, (uint32_t) isr0);
     idt_set_gate(1, (uint32_t) isr1);
     idt_set_gate(2, (uint32_t) isr2);
@@ -104,8 +110,10 @@ void idt_init() {
     idt_set_gate(128, (uint32_t) isr128);
     idt_set_gate(177, (uint32_t) isr177);
 
+    // init programmable interrupt controller (PIC)
     pic_init();
 
+    // set IRQ gates
     idt_set_gate(32, (uint32_t) irq0);
     idt_set_gate(33, (uint32_t) irq1);
     idt_set_gate(34, (uint32_t) irq2);
@@ -123,10 +131,13 @@ void idt_init() {
     idt_set_gate(46, (uint32_t) irq14);
     idt_set_gate(47, (uint32_t) irq15);
 
+    // call extern idt load fucntion defined in __idt.S
     load_idt(&idtr);
 
     BOOT_LOG("IDT Loaded.")
 
+    // check if interrupts are successfully enabled
+    // if not, halt execution
     if (check_interrupts_enabled()) {
         BOOT_LOG("Interrupt enable checks passed.")
     } 
@@ -136,35 +147,58 @@ void idt_init() {
     }
 }
 
-void register_interrupt_handler(uint8_t index, isr_t handler) {
+void register_interrupt_handler(uint8_t index, isr_t handler) 
+{
+    // set interrupt handler entry in table
     interrupt_handlers[index] = handler;
 }
 
-void isr_handler(i_register_t registers) {
+void isr_handler(i_register_t registers) 
+{
+    // handle ISR exceptions
     if (registers.int_no < 32) {
+        // set text color to red for exceptions
+        tty_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
+
         tty_write("\nKERNEL PANIC! ");
         tty_write(exception_messages[registers.int_no]);
             
-        // hang
-        for (;;);
+        // stop execution
+        hlt();
+
+    // handle syscall ISR
+    } else if (registers.int_no == 128) {
+        isr_t handler = interrupt_handlers[registers.int_no];
+
+        handler(registers);
     }
 }
 
-void irq_handler(i_register_t registers) {
+void irq_handler(i_register_t registers) 
+{
+    // call IRQ handler associated with interrupt number
     if (interrupt_handlers[registers.int_no] != 0) {
         isr_t handler = interrupt_handlers[registers.int_no];
         handler(registers);
     }
 
+    // send EOI instruction to PIC
     if (registers.int_no >= 40) outb(PIC_CMD_PORT_SLAVE, 0x20);
     outb(PIC_CMD_PORT_MASTER, 0x20);
 }
 
-void idt_set_gate(uint8_t index, uint32_t handler) {
+void idt_set_gate(uint8_t index, uint32_t handler) 
+{
+    // setup IDT gate, permissions, offset, etc.
     idt[index].isr_low = handler & 0xFFFF;
     idt[index].kernel_cs = 0x08;
     idt[index].reserved = 0;
-    idt[index].attributes = INTERRUPT_GATE;
     idt[index].isr_high = (handler >> 16) & 0xFFFF;
+
+    if (index == 128) {
+        idt[index].attributes = INTERRUPT_GATE;
+    } else {
+        idt[index].attributes = INTERRUPT_GATE;
+    }
 }
 

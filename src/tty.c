@@ -4,7 +4,8 @@
 
 tty_state_t tty_state;
 
-void tty_init() {
+void tty_init() 
+{
     // Set foreground color to white, background to blue
     // Feel free to change this
     tty_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
@@ -12,7 +13,8 @@ void tty_init() {
     vga_init();
 }
 
-void tty_write(const char* str) {
+void tty_write(const char* str) 
+{
     // Loop through each character and putc to screen
     for (size_t i = 0; i < strlen(str); ++i) {
         // Detect when a newline character is present
@@ -28,7 +30,8 @@ void tty_write(const char* str) {
     }
 }
 
-void tty_clear() {
+void tty_clear() 
+{
     // Clear vga buffer
     vga_clear();
 
@@ -37,15 +40,22 @@ void tty_clear() {
     tty_state.row = 0;
 }
 
-void tty_setcolor(vga_color_t fg, vga_color_t bg) {
-    vga_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+void tty_setcolor(vga_color_t fg, vga_color_t bg) 
+{
+    vga_setcolor(fg, bg);
 
     tty_state.fgcolor = fg;
     tty_state.bgcolor = bg;
 }
 
-void tty_welcome() {
-    BOOT_LOG("kOS booted and initialized successfully")
+void tty_welcome() 
+{
+    // temporarily set text color to green
+    vga_setcolor(VGA_COLOR_GREEN, tty_state.bgcolor);
+    tty_write("\nkOS booted and initialized successfully!\n");
+
+    // set text color back to default
+    vga_setcolor(tty_state.fgcolor, tty_state.bgcolor);
 
     tty_write("\n\n");
     tty_write(" /$$        /$$$$$$   /$$$$$$\n");

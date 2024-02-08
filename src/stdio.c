@@ -3,7 +3,8 @@
 #include "stdio.h"
 #include "tty.h"
 
-char* itoa(int value, char* str, int base) {
+char* itoa(int value, char* str, int base) 
+{
     char* rc;
     char* ptr;
     char* low;
@@ -36,7 +37,8 @@ char* itoa(int value, char* str, int base) {
     return rc;
 }
 
-void printf(const char* fmt, ...) {
+void printf(const char* fmt, ...) 
+{
     va_list ap;
     char* buffer;
     char c;
@@ -78,7 +80,8 @@ void printf(const char* fmt, ...) {
     }
 }
 
-void* memset(void* dest, register int data, register size_t length) {
+void* memset(void* dest, register int data, register size_t length) 
+{
     // Cast destination pointer to char pointer to dereference later
     unsigned char* ptr = (unsigned char*) dest;
 

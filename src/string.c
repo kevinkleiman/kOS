@@ -1,6 +1,7 @@
 #include "string.h"
 
-size_t strlen(const char* str) {
+size_t strlen(const char* str) 
+{
     // Assume length at zero
     size_t length = 0;
 
@@ -11,14 +12,16 @@ size_t strlen(const char* str) {
     return length;
 }
 
-void strcpy(const char* src, char* dest) {
+void strcpy(const char* src, char* dest) 
+{
     // Pretty loosey goosey way of doing this but fuck it
     for (size_t i = 0; i < strlen(src); ++i) {
         dest[i] = src[i];
     }
 }
 
-bool strcmp(const char* a, const char* b) {
+bool strcmp(const char* a, const char* b) 
+{
     // Cache length of a and b to save a bit of runtime
     size_t a_len = strlen(a);
     size_t b_len = strlen(b);
