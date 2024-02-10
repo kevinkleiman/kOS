@@ -3,11 +3,13 @@
 #include "stdio.h"
 #include "tty.h"
 
+/* Init syscall table */
 static syscall_t syscall_entries[10] = {
     __syscall_write,
     __syscall_open
 };
 
+/* Unused for now */
 __attribute__((naked)) void syscall_push_regs() 
 {
     __asm__ __volatile__(
@@ -27,6 +29,7 @@ __attribute__((naked)) void syscall_push_regs()
                         );
 }
 
+/* Unused for now */
 __attribute__((naked)) void syscall_pop_regs() 
 {
     __asm__ __volatile__(

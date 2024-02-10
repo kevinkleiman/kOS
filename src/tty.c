@@ -6,36 +6,41 @@ tty_state_t tty_state;
 
 void tty_init() 
 {
-    // Set foreground color to white, background to blue
-    // Feel free to change this
+    // set foreground color to white, background to blue
+    // feel free to change this
     tty_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    // Initialize vga interface
+    // initialize vga interface
     vga_init();
+
+    vga_cursor_disable();
 }
 
 void tty_write(const char* str) 
 {
-    // Loop through each character and putc to screen
+    // loop through each character and putc to screen
     for (size_t i = 0; i < strlen(str); ++i) {
-        // Detect when a newline character is present
+        // detect when a newline character is present
         if (str[i] != '\n') vga_putc(str[i], tty_state.row, tty_state.col);
 
-        // If we are at the end of the line (80 columns), break line
+        // if we are at the end of the line (80 columns), break line
         if (++tty_state.col == VGA_WIDTH || str[i] == '\n') {
             tty_state.col = 0;
 
-            // Same for rows
+            // same for rows
             if (++tty_state.row == VGA_HEIGHT) tty_state.row = 0;
         }
     }
+
+    // update cursor after string is written to tty
+    vga_update_cursor(tty_state.col, tty_state.row);
 }
 
 void tty_clear() 
 {
-    // Clear vga buffer
+    // clear vga buffer
     vga_clear();
 
-    // Reset column and row pointers
+    // reset column and row pointers
     tty_state.col = 0;
     tty_state.row = 0;
 }
@@ -57,6 +62,7 @@ void tty_welcome()
     // set text color back to default
     vga_setcolor(tty_state.fgcolor, tty_state.bgcolor);
 
+    // some dope ascii art that I definitely didn't generate...
     tty_write("\n\n");
     tty_write(" /$$        /$$$$$$   /$$$$$$\n");
     tty_write("| $$       /$$__  $$ /$$__  $$\n");
@@ -68,4 +74,10 @@ void tty_welcome()
     tty_write("|__/  \\__/ \\______/  \\______/ \n");
 
     tty_write("\n\nWelcome to kOS!\n");
+
+    // enable vertical cursor (max scanline 15)
+    vga_cursor_enable(1, 15);
+    
+    // update cursor to current row, col
+    vga_update_cursor(tty_state.col, tty_state.row);
 }

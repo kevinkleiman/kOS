@@ -33,7 +33,7 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
     unsigned char scan = inb(0x60) & 0x7F;
     unsigned char pressed = inb(0x60) & 0x80;
 
-    cursor_pos_t cursor_pos = get_cursor_position();
+    cursor_pos_t cursor_pos = vga_get_cursor_position();
 
     switch(scan) {
         case 1:

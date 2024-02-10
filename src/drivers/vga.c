@@ -34,7 +34,34 @@ void vga_clear()
     }
 }
 
-cursor_pos_t get_cursor_position() 
+void vga_cursor_disable() 
+{
+    // disable cursor by writing to 0x3d4 and 0x3d5
+    outb(0x3D4, 0x0A);
+	outb(0x3D5, 0x20);
+}
+
+void vga_cursor_enable(uint8_t start, uint8_t end) 
+{
+    // enable cursor with io
+	outb(0x3D4, 0x0A);
+	outb(0x3D5, (inb(0x3D5) & 0xC0) | start);
+ 
+	outb(0x3D4, 0x0B);
+	outb(0x3D5, (inb(0x3D5) & 0xE0) | end);
+}
+
+void vga_update_cursor(int x, int y)
+{
+	uint16_t pos = y * VGA_WIDTH + x;
+ 
+	outb(0x3D4, 0x0F);
+	outb(0x3D5, (uint8_t) (pos & 0xFF));
+	outb(0x3D4, 0x0E);
+	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+}
+
+cursor_pos_t vga_get_cursor_position() 
 {
     uint16_t pos = 0;
     cursor_pos_t cursor_pos;
@@ -50,3 +77,4 @@ cursor_pos_t get_cursor_position()
 
     return cursor_pos;
 }
+

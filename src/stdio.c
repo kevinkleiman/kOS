@@ -4,31 +4,32 @@
 #include "io.h"
 #include "tty.h"
 
+/* Converts int to ascii representation (used for printing) */
 char* itoa(int value, char* str, int base) 
 {
     char* rc;
     char* ptr;
     char* low;
 
-    // Check for supported base.
+    // check for supported base.
     if (base < 2 || base > 36) {
         *str = '\0';
         return str;
     }
     rc = ptr = str;
-    // Set '-' for negative decimals.
+    // set '-' for negative decimals.
     if (value < 0 && base == 10) *ptr++ = '-';
-    // Remember where the numbers start.
+    // remember where the numbers start.
     low = ptr;
-    // The actual conversion.
+    // the actual conversion.
     do {
-        // Modulo is negative for negative value. This trick makes abs() unnecessary.
+        // modulo is negative for negative value. This trick makes abs() unnecessary.
         *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
         value /= base;
     } while (value);
-    // Terminating the string.
+    // terminating the string.
     *ptr-- = '\0';
-    // Invert the numbers.
+    // invert the numbers.
     while (low < ptr) {
         char tmp = *low;
 
@@ -39,8 +40,10 @@ char* itoa(int value, char* str, int base)
     return rc;
 }
 
+/* Kernel printf targeting tty output */
 void printf(const char* fmt, ...) 
 {
+    // init args and string buffer
     va_list ap;
     char* buffer;
     char c;
@@ -48,36 +51,50 @@ void printf(const char* fmt, ...)
 
     va_start(ap, fmt);
 
+    // loop through string
     for(i = 0; (c = fmt[i] & 0xff) != 0; i++) {
+        // if token not found, write raw character
         if (c != '%') {
             tty_write(&c);
             continue;
         }
 
+        // increment character pointer
         c = fmt[++i] & 0xff;
 
+        // check for null termination
         if (c == 0) break;
 
         switch(c) {
             case 'd':
+                // handle int to ascii conversion
                 itoa(va_arg(ap, int), buffer, DECIMAL);
+
+                // write filled buffer
                 tty_write(buffer);
                 break;
             case 'x':
+                // handle hex conversion
                 itoa(va_arg(ap, int), buffer, HEX);
+                
+                // write prefix "0x" with filled buffer
                 tty_write("0x");
                 tty_write(buffer);
                 break;
             case 'c':
+                // write character passed
                 tty_write(&c);
                 break;
             case 's':
+                // convert arg to string (char*) and write to tty
                 tty_write(va_arg(ap, char*));
                 break;
             case '%':
+                // handle double percent (i.e. printing a % symbol)
                 tty_write("%");
                 break;
             default:
+                // otherwise, just write the fucking character
                 tty_write("%");
                 tty_write(&c);
                 break;
@@ -85,6 +102,7 @@ void printf(const char* fmt, ...)
     }
 }
 
+/* Kernel memset, nearly identical to glibc implementation */
 void* memset(void* dest, register int data, register size_t length) 
 {
     // Cast destination pointer to char pointer to dereference later
@@ -100,6 +118,7 @@ void* memset(void* dest, register int data, register size_t length)
     return dest;
 }
 
+/* Kernel panic/exception handler, nothing fancy */
 __attribute__((noreturn)) void panic(char* msg)
 {
     vga_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);

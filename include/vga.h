@@ -47,5 +47,8 @@ void vga_setcolor(vga_color_t fg, vga_color_t bg);
 void vga_init();
 void vga_putc(char c, size_t row, size_t col);
 void vga_clear();
+void vga_cursor_disable();
+void vga_cursor_enable(uint8_t start, uint8_t end);
+void vga_update_cursor(int x, int y);
 
-cursor_pos_t get_cursor_position();
+cursor_pos_t vga_get_cursor_position();
