@@ -1,18 +1,21 @@
 #include "vga.h"
 #include "io.h"
 
-uint16_t g_vga_color;
+static uint16_t g_vga_color;
 
+/* Sets color entry for VGA buffer */
 void vga_setcolor(vga_color_t fg, vga_color_t bg) 
 {
     g_vga_color = vga_entry_color(fg, bg);
 }
 
+/* For now, just clear the screen on init (also sets default color) */
 void vga_init() 
 {
     vga_clear();
 }
 
+/* Puts a character into the VGA buffer at row, col */
 void vga_putc(char c, size_t row, size_t col) 
 {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
@@ -21,6 +24,7 @@ void vga_putc(char c, size_t row, size_t col)
     vga_buffer[index] = vga_entry(c, g_vga_color);
 }
 
+/* Clear VGA buffer */
 void vga_clear() 
 {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
@@ -34,6 +38,7 @@ void vga_clear()
     }
 }
 
+/* Disalbes cursor */
 void vga_cursor_disable() 
 {
     // disable cursor by writing to 0x3d4 and 0x3d5
@@ -41,16 +46,19 @@ void vga_cursor_disable()
 	outb(0x3D5, 0x20);
 }
 
+/* Enables cursor */
 void vga_cursor_enable(uint8_t start, uint8_t end) 
 {
-    // enable cursor with io
+    // set starting scanline of cursor
 	outb(0x3D4, 0x0A);
 	outb(0x3D5, (inb(0x3D5) & 0xC0) | start);
  
+    // set ending scanline of cursor (for cursor shapes)
 	outb(0x3D4, 0x0B);
 	outb(0x3D5, (inb(0x3D5) & 0xE0) | end);
 }
 
+/* Update cursor to new x, y pos (row, col for tty) */
 void vga_update_cursor(int x, int y)
 {
 	uint16_t pos = y * VGA_WIDTH + x;
@@ -61,6 +69,7 @@ void vga_update_cursor(int x, int y)
 	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
 }
 
+/* Gets cursor position and returns struct of cursor_pos_t (x, y) */
 cursor_pos_t vga_get_cursor_position() 
 {
     uint16_t pos = 0;

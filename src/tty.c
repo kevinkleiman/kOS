@@ -2,8 +2,9 @@
 #include "vga.h"
 #include "string.h"
 
-tty_state_t tty_state;
+static tty_state_t tty_state;
 
+/* Init tty interface and set default color to white on black */
 void tty_init() 
 {
     // set foreground color to white, background to blue
@@ -15,6 +16,7 @@ void tty_init()
     vga_cursor_disable();
 }
 
+/* Write a string to tty output, with row, col tracking */
 void tty_write(const char* str) 
 {
     // loop through each character and putc to screen
@@ -35,6 +37,7 @@ void tty_write(const char* str)
     vga_update_cursor(tty_state.col, tty_state.row);
 }
 
+/* Clear screen and reset row, col pointers */
 void tty_clear() 
 {
     // clear vga buffer
@@ -45,6 +48,7 @@ void tty_clear()
     tty_state.row = 0;
 }
 
+/* Set new color and store fg/bg colors in state */
 void tty_setcolor(vga_color_t fg, vga_color_t bg) 
 {
     vga_setcolor(fg, bg);
@@ -53,6 +57,7 @@ void tty_setcolor(vga_color_t fg, vga_color_t bg)
     tty_state.bgcolor = bg;
 }
 
+/* Just a somewhat unecessary boot success message */
 void tty_welcome() 
 {
     // temporarily set text color to green
