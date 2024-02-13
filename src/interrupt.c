@@ -65,7 +65,8 @@ void pic_init()
     outb(PIC_DATA_PORT_MASTER, 0xFF);
     outb(PIC_DATA_PORT_SLAVE, 0xFF);
 
-    outb(PIC_DATA_PORT_MASTER, 0xFD);
+    // unmask IRQ1 and IRQ8
+    outb(PIC_DATA_PORT_MASTER, 0x7D);
 }
 
 void idt_init() 

@@ -1,6 +1,5 @@
 #include "keyboard.h"
 #include "tty.h"
-#include "stdio.h"
 #include "io.h"
 
 const uint32_t lowercase[128] = {
@@ -33,9 +32,8 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
     unsigned char scan = inb(0x60) & 0x7F;
     unsigned char pressed = inb(0x60) & 0x80;
 
-    cursor_pos_t cursor_pos = vga_get_cursor_position();
-
     switch(scan) {
+        // unused for now
         case 1:
         case 29:
         case 56:
@@ -51,6 +49,17 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
         case 68:
         case 87:
         case 88:
+            break;
+        // start of usable keys
+        case 28:
+            // TODO fix this shit
+            if (pressed == 0) {
+                tty_write((const char*) &lowercase[scan]);
+                tty_write("> ");
+            }
+        case 41:
+            tty_write("\n\nRebooting...\n");
+            warm_reboot();
             break;
         case 54:
         case 42:

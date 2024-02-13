@@ -85,4 +85,6 @@ void tty_welcome()
     
     // update cursor to current row, col
     vga_update_cursor(tty_state.col, tty_state.row);
+
+    tty_write("> ");
 }

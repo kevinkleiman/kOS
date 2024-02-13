@@ -1,7 +1,7 @@
 #include "syscall.h"
-#include "interrupt.h"
 #include "stdio.h"
 #include "tty.h"
+#include "file.h"
 
 /* Init syscall table */
 static syscall_t syscall_entries[10] = {
@@ -60,7 +60,7 @@ void syscall_callback(i_register_t registers)
     }
 
     // lookup syscall from table and call
-    syscall_entries[registers.eax]();
+    syscall_entries[registers.eax](&registers);
 }
 
 void syscall_init() 
@@ -70,13 +70,21 @@ void syscall_init()
     BOOT_LOG("syscalls initialized.")
 }
 
-void __syscall_write() 
-{
-    printf("syscall 1\n");
+void __syscall_write(i_register_t* registers)
+{   
+    // get syscall parameters from registers struct
+    int fd = registers->ebx;
+    char* buffer = (char*) registers->ecx;
+    size_t n = registers->edx;
+
+    // check for standard file descriptors
+    if (fd == STDIN_FD) panic("stdin not yet supported.");
+    else if (fd == STDOUT_FD) tty_write(buffer);            // redirect stdout to tty for now
+    else if (fd == STDERR_FD) printf("stderr: Error %s\n");
 }
 
-void __syscall_open() 
+void __syscall_open(i_register_t* registers)
 {
-    printf("syscall 2\n");
+    printf("syscall open()\n");
 }
 

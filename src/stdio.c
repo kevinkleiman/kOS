@@ -128,3 +128,4 @@ __attribute__((noreturn)) void panic(char* msg)
     // halt all execution
     hlt();
 }
+

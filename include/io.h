@@ -2,6 +2,9 @@
 
 #include <stdint.h>
 
+#define KBRD_INTRFC 0x64
+#define KBRD_RESET 0xFE
+
 /*
 
 Contains all I/O functions (some inline for optimization)
@@ -45,4 +48,13 @@ __attribute__((noreturn)) static void hlt()
     __asm__ __volatile__( "hlt" );
 
     for(;;);
+}
+
+__attribute__((noreturn)) static void warm_reboot()
+{
+    // send cpu reset signal
+    outb(KBRD_INTRFC, KBRD_RESET);
+
+    // halt all execution
+    hlt();
 }
