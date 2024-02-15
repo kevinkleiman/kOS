@@ -57,6 +57,7 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
                 tty_write((const char*) &lowercase[scan]);
                 tty_write("> ");
             }
+            break;
         case 41:
             tty_write("\n\nRebooting...\n");
             warm_reboot();

@@ -20,6 +20,7 @@
 #include "keyboard.h"
 #include "syscall.h"
 #include "rtc.h"
+#include "pit.h"
 
 /* Kernel entry point (init hardware and drivers) */
 void kernel_main(void) 
@@ -28,20 +29,23 @@ void kernel_main(void)
     tty_init();
     gdt_init(); 
     idt_init();
-    // rtc_init();
+    rtc_init();
+    pit_init();
     keyboard_init();
 
     // init syscalls after interrupts setup
     syscall_init();
 
-    // print ascii art welcome message
-    tty_welcome();
-    
+    sleep(1000);
+
     // testing syscalls
-    // __asm__ __volatile__("movl $1, %ebx");
     // __asm__ __volatile__("movl %0, %%ecx" : : "r"(&k) : "memory");
     // __asm__ __volatile__("movl $1, %edx");
     // __asm__ __volatile__("movl $0, %eax; int $0x80");
+
+    // print ascii art welcome message
+    tty_welcome();
+    
     
     // hang, technically uneccessary due to
     // the way this is handled in boot.S

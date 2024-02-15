@@ -31,26 +31,26 @@ static inline void outb(uint16_t port, uint8_t byte)
 }
 
 /* Clear interrupts */
-__attribute__((naked)) static void cli() 
+__attribute__((naked, used)) static void cli() 
 {
     __asm__ __volatile__( "cli" );
 }
 
 /* Set (re-enable) interrupts */
-__attribute__((naked)) static void sti() 
+__attribute__((naked, used)) static void sti() 
 {
     __asm__ __volatile__( "sti" );
 }
 
 /* Halt all CPU execution and loop infinitely */
-__attribute__((noreturn)) static void hlt() 
+__attribute__((noreturn, used)) static void hlt() 
 {
     __asm__ __volatile__( "hlt" );
 
     for(;;);
 }
 
-__attribute__((noreturn)) static void warm_reboot()
+__attribute__((noreturn, used)) static void warm_reboot()
 {
     // send cpu reset signal
     outb(KBRD_INTRFC, KBRD_RESET);
