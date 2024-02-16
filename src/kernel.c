@@ -21,9 +21,11 @@
 #include "syscall.h"
 #include "rtc.h"
 #include "pit.h"
+#include "multiboot.h"
+#include "memory.h"
 
 /* Kernel entry point (init hardware and drivers) */
-void kernel_main(void) 
+void kernel_main(multiboot_info_t* mbd, uint32_t magic) 
 {
     // init drivers and hardware
     tty_init();
@@ -36,16 +38,14 @@ void kernel_main(void)
     // init syscalls after interrupts setup
     syscall_init();
 
-    sleep(1000);
-
+    // print ascii art welcome message
+    tty_welcome();
+    
+    memory_init(mbd);
     // testing syscalls
     // __asm__ __volatile__("movl %0, %%ecx" : : "r"(&k) : "memory");
     // __asm__ __volatile__("movl $1, %edx");
     // __asm__ __volatile__("movl $0, %eax; int $0x80");
-
-    // print ascii art welcome message
-    tty_welcome();
-    
     
     // hang, technically uneccessary due to
     // the way this is handled in boot.S
