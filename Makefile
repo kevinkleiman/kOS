@@ -22,11 +22,11 @@ default:
 		mv ./*.o $(OBJECTDIR)
 		$(CC)-gcc -T linker.ld -o $(BOOTDIR)/$(KERNELTARGET).bin -ffreestanding -O2 -nostdlib $(OBJECTS) -lgcc
 
-buildenv:
+env:
 		docker build env -t kos
 
-docker:
-		docker run --rm -it -v .:/root/env kos
+image: 
+		docker run -it --rm -v .:/root/env kos make grub
 
 verify:
 		grub-file --is-x86-multiboot $(BOOTDIR)/$(KERNELTARGET).bin
