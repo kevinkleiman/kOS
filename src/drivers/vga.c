@@ -24,6 +24,23 @@ void vga_putc(char c, size_t row, size_t col)
     vga_buffer[index] = vga_entry(c, g_vga_color);
 }
 
+/* Shift VGA buffer one column down */
+void vga_scroll()
+{
+    uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
+
+    for (int row = 1; row < VGA_HEIGHT; row++) {
+        for (int col = 0; col < VGA_WIDTH; col++) {
+            size_t index = row * VGA_WIDTH + col;
+            size_t scroll_index = (row - 1) * VGA_WIDTH + col;
+
+            uint16_t entry = vga_buffer[index];
+
+            vga_buffer[scroll_index] = entry;
+        }
+    }
+}
+
 /* Clear VGA buffer */
 void vga_clear() 
 {

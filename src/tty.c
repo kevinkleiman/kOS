@@ -39,7 +39,10 @@ void tty_putc(char c)
         tty_state.col = 0;
 
         // same for rows
-        if (++tty_state.row == VGA_HEIGHT) tty_state.row = 0;
+        if (++tty_state.row == VGA_HEIGHT) {
+            --tty_state.row;
+            vga_scroll();
+        } 
     }
 }
 

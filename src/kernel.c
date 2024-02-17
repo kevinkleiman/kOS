@@ -31,6 +31,10 @@ void kernel_main(uint32_t magic, volatile multiboot_info_t* mbd)
 {
     // init drivers and hardware
     tty_init();
+
+    // detect grub version
+    printf("Booting with %s\n\n", mbd->boot_loader_name);
+
     gdt_init(); 
     idt_init();
     rtc_init();
@@ -38,6 +42,7 @@ void kernel_main(uint32_t magic, volatile multiboot_info_t* mbd)
     keyboard_init();
 
     // init memory map
+    memory_init(mbd);
 
     // init syscalls after interrupts setup
     syscall_init();
@@ -45,14 +50,7 @@ void kernel_main(uint32_t magic, volatile multiboot_info_t* mbd)
     // print ascii art welcome message
     tty_welcome();
 
-    memory_init(mbd);
-    // for (int i = 0; i < mbd->mmap_length; i += sizeof(multiboot_mmap_entry_t)) {
-    //     multiboot_mmap_entry_t* cur = (multiboot_mmap_entry_t*) (mbd->mmap_addr + i);
-    //     printf("low address: %x ", cur->addr_low);
-    // }
-    //
 
-    // printf("%x", (uint32_t) mbd);
     // testing syscalls
     // __asm__ __volatile__("movl %0, %%ecx" : : "r"(&k) : "memory");
     // __asm__ __volatile__("movl $1, %edx");

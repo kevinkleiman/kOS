@@ -1,5 +1,6 @@
 #include "interrupt.h"
 #include "io.h"
+#include "stdio.h"
 #include "tty.h"
 #include "vga.h"
 
@@ -139,13 +140,7 @@ void idt_init()
 
     // check if interrupts are successfully enabled
     // if not, halt execution
-    if (check_interrupts_enabled()) {
-        BOOT_LOG("Interrupt enable checks passed.")
-    } 
-    else {
-        BOOT_LOG("Interrupt enable checks failed!")
-        hlt();
-    }
+    if (!check_interrupts_enabled()) panic("Interrupt checks failed!");
 }
 
 void register_interrupt_handler(uint8_t index, isr_t handler) 
