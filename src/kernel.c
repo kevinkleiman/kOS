@@ -25,8 +25,9 @@
 #include "memory.h"
 #include "stdio.h"
 
+
 /* Kernel entry point (init hardware and drivers) */
-void kernel_main(uint32_t magic, multiboot_info_t* mbd) 
+void kernel_main(uint32_t magic, volatile multiboot_info_t* mbd) 
 {
     // init drivers and hardware
     tty_init();
@@ -34,8 +35,9 @@ void kernel_main(uint32_t magic, multiboot_info_t* mbd)
     idt_init();
     rtc_init();
     pit_init();
-    memory_init(mbd);
     keyboard_init();
+
+    // init memory map
 
     // init syscalls after interrupts setup
     syscall_init();
@@ -43,7 +45,14 @@ void kernel_main(uint32_t magic, multiboot_info_t* mbd)
     // print ascii art welcome message
     tty_welcome();
 
+    memory_init(mbd);
+    // for (int i = 0; i < mbd->mmap_length; i += sizeof(multiboot_mmap_entry_t)) {
+    //     multiboot_mmap_entry_t* cur = (multiboot_mmap_entry_t*) (mbd->mmap_addr + i);
+    //     printf("low address: %x ", cur->addr_low);
+    // }
+    //
 
+    // printf("%x", (uint32_t) mbd);
     // testing syscalls
     // __asm__ __volatile__("movl %0, %%ecx" : : "r"(&k) : "memory");
     // __asm__ __volatile__("movl $1, %edx");

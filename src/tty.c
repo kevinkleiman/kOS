@@ -1,4 +1,5 @@
 #include "tty.h"
+#include "stdio.h"
 #include "vga.h"
 #include "string.h"
 
@@ -22,19 +23,24 @@ void tty_write(const char* str)
     // loop through each character and putc to screen
     for (size_t i = 0; i < strlen(str); ++i) {
         // detect when a newline character is present
-        if (str[i] != '\n') vga_putc(str[i], tty_state.row, tty_state.col);
-
-        // if we are at the end of the line (80 columns), break line
-        if (++tty_state.col == VGA_WIDTH || str[i] == '\n') {
-            tty_state.col = 0;
-
-            // same for rows
-            if (++tty_state.row == VGA_HEIGHT) tty_state.row = 0;
-        }
+        tty_putc(str[i]);
     }
 
     // update cursor after string is written to tty
     vga_update_cursor(tty_state.col, tty_state.row);
+}
+
+void tty_putc(char c)
+{
+    if (c != '\n') vga_putc(c, tty_state.row, tty_state.col);
+
+    // if we are at the end of the line (80 columns), break line
+    if (++tty_state.col == VGA_WIDTH || c == '\n') {
+        tty_state.col = 0;
+
+        // same for rows
+        if (++tty_state.row == VGA_HEIGHT) tty_state.row = 0;
+    }
 }
 
 /* Clear screen and reset row, col pointers */
@@ -86,5 +92,7 @@ void tty_welcome()
     // update cursor to current row, col
     vga_update_cursor(tty_state.col, tty_state.row);
 
+    vga_setcolor(VGA_COLOR_LIGHT_BLUE, tty_state.bgcolor);
     tty_write("> ");
+    vga_setcolor(tty_state.fgcolor, tty_state.bgcolor);
 }

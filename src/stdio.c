@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "io.h"
 #include "tty.h"
+#include "vga.h"
 
 
 /* Converts int to ascii representation (used for printing) */
@@ -12,24 +13,42 @@ char* itoa(int value, char* str, int base)
     char* ptr;
     char* low;
 
+    unsigned int ucast;
+    
+    // store unsigned value for later
+    ucast = value;
+
     // check for supported base.
     if (base < 2 || base > 36) {
         *str = '\0';
         return str;
     }
+
     rc = ptr = str;
+
     // set '-' for negative decimals.
     if (value < 0 && base == 10) *ptr++ = '-';
+
     // remember where the numbers start.
     low = ptr;
-    // the actual conversion.
+
     do {
-        // modulo is negative for negative value. This trick makes abs() unnecessary.
-        *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
-        value /= base;
-    } while (value);
+        // had to use this dirty trick for signed 32 bit integers
+        if (base == HEX && value < 0) {
+            *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + ucast % base];
+
+            ucast /= base;
+        } else {
+            // modulo is negative for negative value. This trick makes abs() unnecessary.
+            *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
+
+            value /= base;
+        }
+    } while (ucast && value);
+
     // terminating the string.
     *ptr-- = '\0';
+
     // invert the numbers.
     while (low < ptr) {
         char tmp = *low;
@@ -56,7 +75,7 @@ void printf(const char* fmt, ...)
     for(i = 0; (c = fmt[i] & 0xff) != 0; i++) {
         // if token not found, write raw character
         if (c != '%') {
-            tty_write(&c);
+            tty_putc(c);
             continue;
         }
 
@@ -129,4 +148,3 @@ __attribute__((noreturn)) void panic(char* msg)
     // halt all execution
     hlt();
 }
-
