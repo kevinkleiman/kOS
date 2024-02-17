@@ -25,9 +25,6 @@ void tty_write(const char* str)
         // detect when a newline character is present
         tty_putc(str[i]);
     }
-
-    // update cursor after string is written to tty
-    vga_update_cursor(tty_state.col, tty_state.row);
 }
 
 void tty_putc(char c)
@@ -40,10 +37,13 @@ void tty_putc(char c)
 
         // same for rows
         if (++tty_state.row == VGA_HEIGHT) {
-            --tty_state.row;
             vga_scroll();
+            --tty_state.row;
         } 
     }
+
+    // update cursor after string is written to tty
+    vga_update_cursor(tty_state.col, tty_state.row);
 }
 
 /* Clear screen and reset row, col pointers */

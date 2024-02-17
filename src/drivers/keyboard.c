@@ -55,7 +55,7 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
         case 28:
             // TODO fix this shit
             if (pressed == 0) {
-                tty_write((const char*) &lowercase[scan]);
+                tty_putc(lowercase[scan]);
                 vga_setcolor(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
                 tty_write("> ");
                 vga_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
@@ -80,9 +80,9 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
         default:
             if (pressed == 0) {
                 if (caps || caps_lock) {
-                    tty_write((const char*) &uppercase[scan]);
+                    tty_putc(uppercase[scan]);
                 } else {
-                    tty_write((const char*) &lowercase[scan]);
+                    tty_putc(lowercase[scan]);
                 }
             }
     }

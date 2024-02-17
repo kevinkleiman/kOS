@@ -29,13 +29,19 @@ void vga_scroll()
 {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
 
+    // loop through every row and col (80 * 25)
     for (int row = 1; row < VGA_HEIGHT; row++) {
         for (int col = 0; col < VGA_WIDTH; col++) {
+            // get current index of vga entry
             size_t index = row * VGA_WIDTH + col;
+            // move index up one row and retain column
             size_t scroll_index = (row - 1) * VGA_WIDTH + col;
 
+            // set newe buffer entry
             uint16_t entry = vga_buffer[index];
 
+            // clear previous index and set new
+            vga_buffer[index] = vga_entry(' ', g_vga_color);
             vga_buffer[scroll_index] = entry;
         }
     }

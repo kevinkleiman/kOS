@@ -50,7 +50,6 @@ void kernel_main(uint32_t magic, volatile multiboot_info_t* mbd)
     // print ascii art welcome message
     tty_welcome();
 
-
     // testing syscalls
     // __asm__ __volatile__("movl %0, %%ecx" : : "r"(&k) : "memory");
     // __asm__ __volatile__("movl $1, %edx");
