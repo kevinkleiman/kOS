@@ -66,8 +66,6 @@ void syscall_callback(i_register_t registers)
 void syscall_init() 
 {
     register_interrupt_handler(128, syscall_callback); 
-
-    BOOT_LOG("syscalls initialized.")
 }
 
 void __syscall_write(i_register_t* registers)

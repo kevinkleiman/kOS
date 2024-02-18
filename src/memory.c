@@ -13,6 +13,4 @@ void memory_init(volatile multiboot_info_t* mbd)
     for (size_t i = 0; i < n_entries; i++) {
         // printf("type: %x | ", mmap_base[i].type);
     }
-    
-    BOOT_LOG("Memory map loaded.");
 }

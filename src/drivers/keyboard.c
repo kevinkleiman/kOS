@@ -2,6 +2,8 @@
 #include "tty.h"
 #include "io.h"
 #include "vga.h"
+#include "string.h"
+#include "stdio.h"
 
 const uint32_t lowercase[128] = {
     UNKNOWN,ESC,'1','2','3','4','5','6','7','8',
@@ -26,8 +28,10 @@ const uint32_t uppercase[128] = {
     UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
 };
 
+
 bool caps;
 bool caps_lock;
+static char keybuffer[256];
 
 void keyboard_callback(__attribute__((unused)) i_register_t registers) {
     unsigned char scan = inb(0x60) & 0x7F;
@@ -56,9 +60,14 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
             // TODO fix this shit
             if (pressed == 0) {
                 tty_putc(lowercase[scan]);
+                showbuf();
+
                 vga_setcolor(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
                 tty_write("> ");
                 vga_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+                
+                // clear keybuffer
+                memset(keybuffer, 0, 256);
             }
             break;
         case 41:
@@ -80,12 +89,21 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
         default:
             if (pressed == 0) {
                 if (caps || caps_lock) {
+                    keybuffer[strlen(keybuffer)] = uppercase[scan];
+
                     tty_putc(uppercase[scan]);
                 } else {
+                    keybuffer[strlen(keybuffer)] = lowercase[scan];
+
                     tty_putc(lowercase[scan]);
                 }
             }
     }
+}
+
+void showbuf() 
+{
+    printf("%s\n", keybuffer);
 }
 
 void keyboard_init() {

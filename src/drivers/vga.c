@@ -47,6 +47,21 @@ void vga_scroll()
     }
 }
 
+void vga_setbar(vga_color_t fg, vga_color_t bg, char* str, size_t offset)
+{
+    uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
+    uint16_t color = vga_entry_color(fg, bg);
+    uint16_t entry = vga_entry(' ', color);
+
+    for (int i = 0; i < VGA_WIDTH; ++i) {
+        if (i >= offset) {
+            // if (str[i - offset]) vga_buffer[24 * VGA_WIDTH + i] = vga_entry(str[i - offset], color);
+        } else {
+            vga_buffer[24 * VGA_WIDTH + i] = vga_entry(' ', color);
+        }
+    }
+}
+
 /* Clear VGA buffer */
 void vga_clear() 
 {

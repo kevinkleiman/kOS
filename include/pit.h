@@ -13,3 +13,4 @@
 void pit_callback(i_register_t registers);
 void pit_init();
 void sleep(uint32_t millis);
+void poll();

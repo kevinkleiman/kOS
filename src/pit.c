@@ -2,13 +2,16 @@
 #include "tty.h"
 #include "io.h"
 
+
 /* Initialize count down for sleep function */
 static volatile uint32_t count_down;
 
 /* Decrement counter on clock edge */
 void pit_callback(__attribute__((unused)) i_register_t registers)
 {
-    count_down -= 1;
+    --count_down;
+
+    poll();
 }
 
 /* Global kernel sleep function, sleep for x milliseconds */
@@ -32,4 +35,8 @@ void pit_init()
     outb(PIT_CHANNEL0, (uint8_t) ((divisor >> 8) & 0xFF));
 
     BOOT_LOG("PIT initialized.")
+}
+
+void poll()
+{
 }

@@ -37,4 +37,5 @@
 #define NUMLCK 0xFFFFFFFF - 32
 
 void keyboard_callback(i_register_t registers);
+void showbuf();
 void keyboard_init();
