@@ -1,5 +1,4 @@
 #include "tty.h"
-#include "stdio.h"
 #include "vga.h"
 #include "string.h"
 

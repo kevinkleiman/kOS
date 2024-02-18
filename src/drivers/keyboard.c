@@ -57,17 +57,11 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
             break;
         // start of usable keys
         case 28:
-            // TODO fix this shit
             if (pressed == 0) {
                 tty_putc(lowercase[scan]);
-                showbuf();
-
-                vga_setcolor(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
-                tty_write("> ");
-                vga_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
                 
-                // clear keybuffer
-                memset(keybuffer, 0, 256);
+                // kernel cli for interpreting basic commands
+                kcli(keybuffer, sizeof(keybuffer));
             }
             break;
         case 41:
@@ -78,7 +72,6 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
         case 42:
             caps = (pressed == 0) ? true : false;
             break;
-
         case 58:
             if (!caps_lock && pressed == 0) {
                 caps_lock = true;
@@ -99,11 +92,6 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
                 }
             }
     }
-}
-
-void showbuf() 
-{
-    printf("%s\n", keybuffer);
 }
 
 void keyboard_init() {

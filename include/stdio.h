@@ -14,3 +14,4 @@ void* memset(void* dest, register int data, register size_t length);
 
 void panic(char* msg);
 void printf(const char* fmt, ...);
+void kcli(char pkeybuffer[], size_t bufsize);

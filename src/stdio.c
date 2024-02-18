@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include "stdio.h"
+#include "string.h"
 #include "io.h"
 #include "tty.h"
 #include "vga.h"
@@ -136,6 +137,20 @@ void* memset(void* dest, register int data, register size_t length)
 
     // Return destination pointer
     return dest;
+}
+
+/* A very minimal, shitty cli for kernel ops */
+void kcli(char pkeybuffer[], size_t bufsize)
+{
+   if (strcmp(pkeybuffer, "clear")) {
+        tty_clear();
+    } 
+
+    vga_setcolor(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
+    tty_write("> ");
+    vga_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+
+    memset(pkeybuffer, 0, bufsize);
 }
 
 /* Kernel panic/exception handler, nothing fancy */
