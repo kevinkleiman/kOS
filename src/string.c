@@ -12,7 +12,7 @@ size_t strlen(const char* str)
     return length;
 }
 
-void strcpy(const char* src, char* dest) 
+void strcpy(char* dest, const char* src) 
 {
     // Pretty loosey goosey way of doing this but fuck it
     for (size_t i = 0; i < strlen(src); ++i) {
@@ -20,9 +20,17 @@ void strcpy(const char* src, char* dest)
     }
 }
 
+void strncpy(char* dest, const char* src, size_t n) 
+{
+    // Pretty loosey goosey way of doing this but fuck it
+    for (size_t i = 0; i < n; ++i) {
+        if (src[i] != '\0') dest[i] = src[i];
+    }
+}
+
 bool strcmp(const char* a, const char* b) 
 {
-    // Cache length of a and b to save a bit of runtime
+    // Cache length of a and b
     size_t a_len = strlen(a);
     size_t b_len = strlen(b);
 

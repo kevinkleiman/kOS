@@ -26,6 +26,18 @@ void tty_write(const char* str)
     }
 }
 
+void tty_writecolor(const char* str, vga_color_t fg, vga_color_t bg) 
+{
+    // set color to desired
+    vga_setcolor(fg, bg);
+
+    // loop through each character and putc to screen
+    tty_write(str);
+
+    // set color back to default tty state
+    vga_setcolor(tty_state.fgcolor, tty_state.bgcolor);
+}
+
 void tty_putc(char c)
 {
     if (c != '\n') vga_putc(c, tty_state.row, tty_state.col);
@@ -94,7 +106,5 @@ void tty_welcome()
     // update cursor to current row, col
     vga_update_cursor(tty_state.col, tty_state.row);
 
-    vga_setcolor(VGA_COLOR_LIGHT_BLUE, tty_state.bgcolor);
-    tty_write("> ");
-    vga_setcolor(tty_state.fgcolor, tty_state.bgcolor);
+    tty_writecolor("> ", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
 }

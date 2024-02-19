@@ -1,7 +1,6 @@
 #include "keyboard.h"
 #include "tty.h"
 #include "io.h"
-#include "vga.h"
 #include "string.h"
 #include "stdio.h"
 
@@ -32,6 +31,7 @@ const uint32_t uppercase[128] = {
 bool caps;
 bool caps_lock;
 static char keybuffer[256];
+static char prevkb[256];
 
 void keyboard_callback(__attribute__((unused)) i_register_t registers) {
     unsigned char scan = inb(0x60) & 0x7F;
@@ -56,10 +56,18 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
         case 88:
             break;
         // start of usable keys
+        case 96:
+            // TODO: this is fucked up
+            if (pressed == 0) {
+                strncpy(keybuffer, prevkb, sizeof(keybuffer));
+                tty_write(keybuffer);
+            }
+            break;
         case 28:
             if (pressed == 0) {
                 tty_putc(lowercase[scan]);
-                
+                strncpy(prevkb, keybuffer, sizeof(prevkb));
+
                 // kernel cli for interpreting basic commands
                 kcli(keybuffer, sizeof(keybuffer));
             }

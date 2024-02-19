@@ -23,17 +23,18 @@
 #include "pit.h"
 #include "multiboot.h"
 #include "memory.h"
-#include "stdio.h"
 
 
 /* Kernel entry point (init hardware and drivers) */
-void kernel_main(uint32_t magic, volatile multiboot_info_t* mbd) 
+void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info_t* mbd) 
 {
     // init drivers and hardware
     tty_init();
 
-    // detect grub version
-    printf("Booting with %s\n\n", mbd->boot_loader_name);
+    // detect bootloader
+    tty_writecolor("Booted with ", VGA_COLOR_CYAN, VGA_COLOR_BLACK);
+    tty_writecolor((const char*) mbd->boot_loader_name, VGA_COLOR_CYAN, VGA_COLOR_BLACK);
+    tty_write("\n");
 
     gdt_init(); 
     idt_init();

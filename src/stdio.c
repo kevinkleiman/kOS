@@ -146,9 +146,7 @@ void kcli(char pkeybuffer[], size_t bufsize)
         tty_clear();
     } 
 
-    vga_setcolor(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
-    tty_write("> ");
-    vga_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+    tty_writecolor("> ", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
 
     memset(pkeybuffer, 0, bufsize);
 }
