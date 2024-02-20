@@ -34,7 +34,7 @@ void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info
     // detect bootloader
     tty_writecolor("Booted with ", VGA_COLOR_CYAN, VGA_COLOR_BLACK);
     tty_writecolor((const char*) mbd->boot_loader_name, VGA_COLOR_CYAN, VGA_COLOR_BLACK);
-    tty_write("\n");
+    tty_write("\n\n");
 
     gdt_init(); 
     idt_init();

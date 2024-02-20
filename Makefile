@@ -6,6 +6,7 @@ DRIVERSDIR := $(SRCDIR)/drivers
 INCLUDEDIR := ./include
 
 CC := i686-elf
+ASC := nasm -f elf32
 EMU := qemu-system-i386
 
 OBJECTS := $(OBJECTDIR)/*.o
@@ -15,9 +16,9 @@ ASMTARGETS := $(ASMDIR)/*.S
 KERNELTARGET := kos
 
 default:
-		$(CC)-as $(ASMDIR)/boot.S -o $(OBJECTDIR)/boot.o
-		nasm -f elf32 $(ASMDIR)/__gdt.S -o $(OBJECTDIR)/__gdt.o
-		nasm -f elf32 $(ASMDIR)/__idt.S -o $(OBJECTDIR)/__idt.o
+		$(ASC) $(ASMDIR)/boot.S -o $(OBJECTDIR)/boot.o
+		$(ASC) $(ASMDIR)/__gdt.S -o $(OBJECTDIR)/__gdt.o
+		$(ASC) $(ASMDIR)/__idt.S -o $(OBJECTDIR)/__idt.o
 		$(CC)-gcc -I $(INCLUDEDIR) -c $(CTARGETS) -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 		mv ./*.o $(OBJECTDIR)
 		$(CC)-gcc -T linker.ld -o $(BOOTDIR)/$(KERNELTARGET).bin -ffreestanding -O2 -nostdlib $(OBJECTS) -lgcc
