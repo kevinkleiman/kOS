@@ -1,5 +1,6 @@
 #include "vga.h"
 #include "io.h"
+#include "string.h"
 
 static uint16_t g_vga_color;
 
@@ -47,15 +48,17 @@ void vga_scroll()
     }
 }
 
-void vga_setbar(vga_color_t fg, vga_color_t bg, char* str, size_t offset)
+void vga_setbar(vga_color_t fg, vga_color_t bg, const char* str, size_t offset)
 {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
     uint16_t color = vga_entry_color(fg, bg);
     uint16_t entry = vga_entry(' ', color);
 
+    size_t len = strlen(str);
+
     for (int i = 0; i < VGA_WIDTH; ++i) {
-        if (i >= offset) {
-            // if (str[i - offset]) vga_buffer[24 * VGA_WIDTH + i] = vga_entry(str[i - offset], color);
+        if (i >= offset && i < (offset + len)) {
+            vga_buffer[24 * VGA_WIDTH + i] = vga_entry(str[i - offset], color);
         } else {
             vga_buffer[24 * VGA_WIDTH + i] = vga_entry(' ', color);
         }

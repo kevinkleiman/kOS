@@ -23,6 +23,7 @@
 #include "pit.h"
 #include "multiboot.h"
 #include "memory.h"
+#include "stdio.h"
 
 
 /* Kernel entry point (init hardware and drivers) */

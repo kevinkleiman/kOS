@@ -48,7 +48,7 @@ void vga_setcolor(vga_color_t fg, vga_color_t bg);
 void vga_init();
 void vga_putc(char c, size_t row, size_t col);
 void vga_scroll();
-void vga_setbar(vga_color_t fg, vga_color_t bg, char* str, size_t offset);
+void vga_setbar(vga_color_t fg, vga_color_t bg, const char* str, size_t offset);
 void vga_clear();
 void vga_cursor_disable();
 void vga_cursor_enable(uint8_t start, uint8_t end);

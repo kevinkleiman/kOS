@@ -1,18 +1,18 @@
 #include "memory.h"
-#include "stdio.h"
-#include "tty.h"
 
 
 void memory_init(volatile multiboot_info_t* mbd)
 {
-    multiboot_mmap_entry_t* mmap_base = (multiboot_mmap_entry_t*) mbd->mmap_addr;
-    multiboot_mmap_entry_t cur;
-    
-    size_t n_entries = (mbd->mmap_length / sizeof(multiboot_mmap_entry_t));
+    uint32_t mem_high = mbd->mem_upper;
+    uint32_t phys_alloc_start = (mem_high + 0xFFF) & ~0xFFF;
+}
 
-    // loop through each multiboot info struct
-    for (size_t i = 0; i < n_entries; i++) {
-        cur = mmap_base[i]; 
-        // printf("type: %x | ", mmap_base[i].type);
-    }
+void pmm_init()
+{
+
+}
+
+void invalidate_page(uint32_t vaddr)
+{
+    __asm__ __volatile__ ("invlpg %0" :: "m"(vaddr));
 }

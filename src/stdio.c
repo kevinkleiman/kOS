@@ -104,7 +104,7 @@ void printf(const char* fmt, ...)
                 break;
             case 'c':
                 // write character passed
-                tty_write(&c);
+                tty_putc(va_arg(ap, int));
                 break;
             case 's':
                 // convert arg to string (char*) and write to tty
@@ -122,6 +122,67 @@ void printf(const char* fmt, ...)
         }
     }
 }
+
+/* WIP */
+void sprintf(const char* fmt, char* buffer, ...) 
+{
+    // init args and string buffer
+    va_list ap;
+    char c;
+    int i;
+
+    va_start(ap, fmt);
+
+    // loop through string
+    for(i = 0; (c = fmt[i] & 0xff) != 0; i++) {
+        // if token not found, write raw character
+        if (c != '%') {
+            buffer[i] = c;
+            continue;
+        }
+
+        // increment character pointer
+        c = fmt[++i] & 0xff;
+
+        // check for null termination
+        if (c == 0) break;
+
+        switch(c) {
+            case 'd':
+                // handle int to ascii conversion
+                itoa(va_arg(ap, int), buffer, DECIMAL);
+                break;
+            case 'x':
+                {
+                    char* tmp;
+                    // handle hex conversion
+                    itoa(va_arg(ap, int), tmp, HEX);
+
+                    strcat(buffer, tmp); 
+                    break;
+                }
+            case 'c':
+                // write character passed
+                buffer[i] = (char) va_arg(ap, int);
+                break;
+            case 's':
+                // convert arg to string (char*) and write to tty
+                {
+                    char* tmp = va_arg(ap, char*);
+                    break;
+                }
+            case '%':
+                // handle double percent (i.e. printing a % symbol)
+                buffer[i] = '%';
+                break;
+            default:
+                // otherwise, just write the fucking character
+                buffer[i] = c;
+                break;
+        }
+    }
+}
+
 
 /* Kernel memset, nearly identical to glibc implementation */
 void* memset(void* dest, register int data, register size_t length) 

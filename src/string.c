@@ -28,6 +28,18 @@ void strncpy(char* dest, const char* src, size_t n)
     }
 }
 
+char* strcat(char* dest, const char* append)
+{
+    // appends one string to another (concatination)
+    char* save = dest;
+    size_t i;
+
+	for (; *dest; ++dest);
+	while ((*dest++ = *append++)); 
+
+	return save;
+}
+
 bool strcmp(const char* a, const char* b) 
 {
     // Cache length of a and b

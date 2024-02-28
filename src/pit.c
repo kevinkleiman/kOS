@@ -1,6 +1,7 @@
 #include "pit.h"
 #include "tty.h"
 #include "io.h"
+#include "rtc.h"
 
 
 /* Initialize count down for sleep function */
@@ -39,4 +40,5 @@ void pit_init()
 
 void poll()
 {
+    rtc_callback();
 }
