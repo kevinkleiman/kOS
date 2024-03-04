@@ -2,7 +2,7 @@
  * 
  * @copyright Copyright (c) 2024, Kevin Kleiman, All Rights Reserved
  * 
- * This is a hobbyOS (kernel really) designed and developed by Kevin Kleiman.
+ * This is the kernel for yet another hobbyOS designed and developed by Kevin Kleiman.
  * Feel free to copy, use, edit, etc. anything you see 
  *
  * This was originally designed to try writing a ring0 math library but I soon realized,
@@ -15,15 +15,14 @@
  */
 
 #include <stdbool.h>
-#include "tty.h"
+#include "drivers/tty.h"
+#include "drivers/keyboard.h"
+#include "drivers/rtc.h"
+#include "drivers/pit.h"
 #include "gdt.h"
-#include "keyboard.h"
 #include "syscall.h"
-#include "rtc.h"
-#include "pit.h"
 #include "multiboot.h"
 #include "memory.h"
-#include "stdio.h"
 
 
 /* Kernel entry point (init hardware and drivers) */

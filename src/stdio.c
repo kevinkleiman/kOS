@@ -1,10 +1,10 @@
 #include <stdbool.h>
 #include <stdarg.h>
+#include "drivers/tty.h"
+#include "drivers/vga.h"
 #include "stdio.h"
 #include "string.h"
 #include "io.h"
-#include "tty.h"
-#include "vga.h"
 
 
 /* Converts int to ascii representation (used for printing) */

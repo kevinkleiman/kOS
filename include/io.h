@@ -14,12 +14,22 @@ and halt cpu execution which are useful in many branches
 
 */
 
-/* Reaad a byte from a word-sized port */
+/* Read a byte from a word-sized port */
 static inline uint8_t inb(uint16_t port) 
 {
     uint8_t ret;
 
     __asm__ __volatile__( "inb %w1, %b0" : "=a"(ret) : "Nd"(port) : "memory" );
+
+    return ret;
+}
+
+/* Read a word from a word-sized port */
+static inline uint16_t inw(uint16_t port) 
+{
+    uint16_t ret;
+
+    __asm__ __volatile__( "inw %1, %0" : "=a"(ret) : "Nd"(port));
 
     return ret;
 }

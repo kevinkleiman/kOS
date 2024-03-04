@@ -1,4 +1,4 @@
-#include "vga.h"
+#include "drivers/vga.h"
 #include "io.h"
 #include "string.h"
 
@@ -52,11 +52,10 @@ void vga_setbar(vga_color_t fg, vga_color_t bg, const char* str, size_t offset)
 {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
     uint16_t color = vga_entry_color(fg, bg);
-    uint16_t entry = vga_entry(' ', color);
 
     size_t len = strlen(str);
 
-    for (int i = 0; i < VGA_WIDTH; ++i) {
+    for (size_t i = 0; i < VGA_WIDTH; ++i) {
         if (i >= offset && i < (offset + len)) {
             vga_buffer[24 * VGA_WIDTH + i] = vga_entry(str[i - offset], color);
         } else {

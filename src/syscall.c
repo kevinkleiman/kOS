@@ -1,6 +1,6 @@
+#include "drivers/tty.h"
 #include "syscall.h"
 #include "stdio.h"
-#include "tty.h"
 #include "file.h"
 
 /* Init syscall table */

@@ -1,5 +1,5 @@
-#include "keyboard.h"
-#include "tty.h"
+#include "drivers/keyboard.h"
+#include "drivers/tty.h"
 #include "io.h"
 #include "string.h"
 #include "stdio.h"

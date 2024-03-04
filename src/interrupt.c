@@ -1,8 +1,8 @@
+#include "drivers/tty.h"
+#include "drivers/vga.h"
 #include "interrupt.h"
 #include "io.h"
 #include "stdio.h"
-#include "tty.h"
-#include "vga.h"
 
 __attribute__((aligned(0x10))) static idt_entry_t idt[256];
 
