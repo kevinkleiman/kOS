@@ -5,6 +5,9 @@ ASMDIR := $(SRCDIR)/asm
 DRIVERSDIR := $(SRCDIR)/drivers
 INCLUDEDIR := ./include
 
+RUSTTARGET := x86_64-kos
+RUSTENTRY := ./target/$(RUSTTARGET)/debug/libkOS.a
+
 CC := i686-elf
 ASC := nasm -f elf32
 EMU := qemu-system-i386
@@ -21,7 +24,7 @@ default:
 		$(ASC) $(ASMDIR)/__idt.S -o $(OBJECTDIR)/__idt.o
 		$(CC)-gcc -I $(INCLUDEDIR) -c $(CTARGETS) -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 		mv ./*.o $(OBJECTDIR)
-		$(CC)-gcc -T linker.ld -o $(BOOTDIR)/$(KERNELTARGET).bin -ffreestanding -O2 -nostdlib $(OBJECTS) -lgcc
+		$(CC)-gcc -T linker.ld -o $(BOOTDIR)/$(KERNELTARGET).bin -ffreestanding -O2 -nostdlib $(OBJECTS) $(RUSTENTRY) -lgcc
 
 env:
 		docker build env -t kos

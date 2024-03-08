@@ -3,8 +3,9 @@
 #include "multiboot.h"
 
 
-#define PAGE_DIR_ENTRIES 1024
-#define PAGE_SIZE 4096
+#define PD_ENTRIES      1024
+#define PD_NOT_PRESENT  0x00000002
+#define PAGE_SIZE       4096
 
 typedef struct page_dir {
     uint8_t first;
