@@ -6,7 +6,8 @@ DRIVERSDIR := $(SRCDIR)/drivers
 INCLUDEDIR := ./include
 
 RUSTTARGET := x86_64-kos
-RUSTENTRY := ./target/$(RUSTTARGET)/debug/libkOS.a
+RUSTBIN := ./rbin
+RUSTENTRY := $(RUSTBIN)/$(RUSTTARGET)/debug/libkOS.a
 
 CC := i686-elf
 ASC := nasm -f elf32
@@ -23,7 +24,10 @@ default:
 		$(ASC) $(ASMDIR)/__gdt.S -o $(OBJECTDIR)/__gdt.o
 		$(ASC) $(ASMDIR)/__idt.S -o $(OBJECTDIR)/__idt.o
 		$(CC)-gcc -I $(INCLUDEDIR) -c $(CTARGETS) -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+
+		CARGO_TARGET_DIR=$(RUSTBIN) cargo build --target $(RUSTTARGET).json
 		mv ./*.o $(OBJECTDIR)
+
 		$(CC)-gcc -T linker.ld -o $(BOOTDIR)/$(KERNELTARGET).bin -ffreestanding -O2 -nostdlib $(OBJECTS) $(RUSTENTRY) -lgcc
 
 env:
