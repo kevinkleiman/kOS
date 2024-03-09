@@ -40,10 +40,10 @@ verify:
 		grub-file --is-x86-multiboot $(BOOTDIR)/$(KERNELTARGET).bin
 
 grub:
-		grub-mkrescue -o $(KERNELTARGET).iso multiboot
+		grub-mkrescue -o $(OBJECTDIR)/$(KERNELTARGET).iso multiboot
 
 run:
-		$(EMU) $(KERNELTARGET).iso
+		$(EMU) $(OBJECTDIR)/$(KERNELTARGET).iso
 
 clean:
 		rm -rf $(OBJECTDIR)/*.*
