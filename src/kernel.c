@@ -23,9 +23,8 @@
 #include "syscall.h"
 #include "multiboot.h"
 #include "memory.h"
-#include "stdio.h"
-#include "drivers/rust_driver.h"
 
+extern uint32_t __init();
 
 /* Kernel entry point (init hardware and drivers) */
 void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info_t* mbd) 
@@ -44,6 +43,9 @@ void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info
     pit_init();
     keyboard_init();
 
+    // init rust static library
+    __init();
+
     // init memory map
     memory_init(mbd);
 
@@ -52,10 +54,6 @@ void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info
 
     // print ascii art welcome message
     tty_welcome();
-
-    uint32_t test = __r_add(1, 2);
-    
-    printf("%d", test);
 
     // testing syscalls
     // __asm__ __volatile__("movl %0, %%ecx" : : "r"(&k) : "memory");
