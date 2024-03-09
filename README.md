@@ -1,7 +1,7 @@
 # kOS
 
 ## Screenshots:
-<img width="725" alt="Screenshot 2024-02-08 at 11 42 08 AM" src="https://github.com/kevinkleiman/kOS/assets/36178104/9edcad9a-af11-435b-84c6-7c5cfe52d8ec">
+<img width="720" alt="Screenshot 2024-03-09 at 2 46 07 PM" src="https://github.com/kevinkleiman/kOS/assets/36178104/ad756ebe-e555-4eb3-9603-c9b35ba8858c">
 
 
 ## Yes, kOS supports both C and Rust! 
