@@ -4,6 +4,8 @@
 <img width="725" alt="Screenshot 2024-02-08 at 11 42 08 AM" src="https://github.com/kevinkleiman/kOS/assets/36178104/9edcad9a-af11-435b-84c6-7c5cfe52d8ec">
 
 
+## Yes, kOS supports both C and Rust! 
+You can write drivers in either C, Rust, or x86 assembly. Go wild!
 
 ## What kOS Is:
 kOS (short for "kevin's OS") pronounced as "chaos", is a lightweight operating system intended to provide absolute freedom while retaining ~some~ safety. It started out of a desire to create

@@ -1,1 +1,0 @@
-/Users/kevinkleiman/Projects/kOS/./lib/target/x86_64-kos/debug/libkOS.a: /Users/kevinkleiman/Projects/kOS/lib/lib.rs /Users/kevinkleiman/Projects/kOS/src/drivers/rs/driver.rs /Users/kevinkleiman/Projects/kOS/src/rs/cdef.rs
