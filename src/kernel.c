@@ -24,15 +24,14 @@
 #include "multiboot.h"
 #include "memory.h"
 
-extern uint32_t __init();
 
 /* Kernel entry point (init hardware and drivers) */
 void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info_t* mbd) 
 {
-    // init drivers and hardware
+    // init kernel tty
     tty_init();
 
-    // detect bootloader
+    // check GRUB version
     tty_writecolor("Booted with ", VGA_COLOR_CYAN, VGA_COLOR_BLACK);
     tty_writecolor((const char*) mbd->boot_loader_name, VGA_COLOR_CYAN, VGA_COLOR_BLACK);
     tty_write("\n\n");
@@ -42,9 +41,6 @@ void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info
     rtc_init();
     pit_init();
     keyboard_init();
-
-    // init rust static library
-    __init();
 
     // init memory map
     memory_init(mbd);

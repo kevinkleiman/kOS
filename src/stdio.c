@@ -61,8 +61,14 @@ char* itoa(int value, char* str, int base)
     return rc;
 }
 
+/* Put string */
+void puts(const char* str)
+{
+    tty_write(str);
+}
+
 /* Kernel printf targeting tty output */
-void printf(const char* fmt, ...) 
+void printk(const char* fmt, ...) 
 {
     // init args and string buffer
     va_list ap;
@@ -124,7 +130,7 @@ void printf(const char* fmt, ...)
 }
 
 /* WIP */
-void sprintf(const char* fmt, char* buffer, ...) 
+void sprintk(const char* fmt, char* buffer, ...) 
 {
     // init args and string buffer
     va_list ap;
@@ -217,7 +223,7 @@ __attribute__((noreturn)) void panic(char* msg)
 {
     vga_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
     // generic error handler
-    printf("Exception encountered! %s\n", msg);
+    printk("Exception encountered! %s\n", msg);
 
     // halt all execution
     hlt();

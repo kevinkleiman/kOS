@@ -52,6 +52,7 @@ __attribute__((naked)) void syscall_pop_regs()
                         );
 }
 
+/* Callback for handling all syscalls */
 void syscall_callback(i_register_t registers) 
 {
     // check that eax does not overflow max syscalls
@@ -78,11 +79,11 @@ void __syscall_write(i_register_t* registers)
     // check for standard file descriptors
     if (fd == STDIN_FD) panic("stdin not yet supported.");
     else if (fd == STDOUT_FD) tty_write(buffer);            // redirect stdout to tty for now
-    else if (fd == STDERR_FD) printf("stderr: Error %s\n");
+    else if (fd == STDERR_FD) printk("stderr: Error %s\n");
 }
 
 void __syscall_open(i_register_t* registers)
 {
-    printf("syscall open()\n");
+    printk("syscall open()\n");
 }
 
