@@ -20,7 +20,7 @@ void tty_init()
 void tty_write(const char* str) 
 {
     // loop through each character and putc to screen
-    for (size_t i = 0; i < strlen(str); ++i) {
+    for (size_t i = 0; i < __strlen(str); ++i) {
         // detect when a newline character is present
         tty_putc(str[i]);
     }

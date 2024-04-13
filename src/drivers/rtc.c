@@ -43,10 +43,10 @@ void rtc_callback()
     char* daybuf;
     char* monthbuf;
 
-    itoa(minute, minbuf, DECIMAL);
-    itoa(hour, hourbuf, DECIMAL);
-    itoa(day, daybuf, DECIMAL);
-    itoa(month, monthbuf, DECIMAL);
+    __itoa(minute, minbuf, DECIMAL);
+    __itoa(hour, hourbuf, DECIMAL);
+    __itoa(day, daybuf, DECIMAL);
+    __itoa(month, monthbuf, DECIMAL);
 
     // char* outbuf;
 

@@ -1,6 +1,6 @@
 #include "string.h"
 
-size_t strlen(const char* str) 
+size_t __strlen(const char* str) 
 {
     // Assume length at zero
     size_t length = 0;
@@ -12,15 +12,15 @@ size_t strlen(const char* str)
     return length;
 }
 
-void strcpy(char* dest, const char* src) 
+void __strcpy(char* dest, const char* src) 
 {
     // Pretty loosey goosey way of doing this but fuck it
-    for (size_t i = 0; i < strlen(src); ++i) {
+    for (size_t i = 0; i < __strlen(src); ++i) {
         dest[i] = src[i];
     }
 }
 
-void strncpy(char* dest, const char* src, size_t n) 
+void __strncpy(char* dest, const char* src, size_t n) 
 {
     // Pretty loosey goosey way of doing this but fuck it
     for (size_t i = 0; i < n; ++i) {
@@ -28,7 +28,7 @@ void strncpy(char* dest, const char* src, size_t n)
     }
 }
 
-char* strcat(char* dest, const char* append)
+char* __strcat(char* dest, const char* append)
 {
     // appends one string to another (concatination)
     char* save = dest;
@@ -40,11 +40,11 @@ char* strcat(char* dest, const char* append)
 	return save;
 }
 
-bool strcmp(const char* a, const char* b) 
+bool __strcmp(const char* a, const char* b) 
 {
     // Cache length of a and b
-    size_t a_len = strlen(a);
-    size_t b_len = strlen(b);
+    size_t a_len = __strlen(a);
+    size_t b_len = __strlen(b);
 
     // If lengths don't match, then strings are not the same
     if (a_len != b_len) return false;

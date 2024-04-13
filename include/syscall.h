@@ -7,8 +7,8 @@
 
 void syscall_init();
 
-void __syscall_write(i_register_t* registers);
-void __syscall_open(i_register_t* registers);
+static void __write(i_register_t* registers);
+static void __open(i_register_t* registers);
 
 typedef void (*syscall_t)(i_register_t* registers);
 

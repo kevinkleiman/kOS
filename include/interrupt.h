@@ -63,13 +63,13 @@ typedef void (*isr_t)(i_register_t);
 
 /* Function definitions for idt setup and interrupts */
 void idt_init();
-void idt_set_gate(uint8_t index, uint32_t handler);
 void register_interrupt_handler(uint8_t index, isr_t handler);
+void idt_set_gate(uint8_t index, uint32_t handler);
 void isr_handler(i_register_t irt_register);
 
 
 /* Checks whether interrupts are enabled */
-static inline bool check_interrupts_enabled() 
+static inline bool __check_interrupts_enabled() 
 {
     unsigned long flags;
 

@@ -5,12 +5,12 @@
 
 /* Init syscall table */
 static syscall_t syscall_entries[10] = {
-    __syscall_write,
-    __syscall_open
+    __write,
+    __open
 };
 
 /* Unused for now */
-__attribute__((naked)) void syscall_push_regs() 
+__attribute__((naked)) static void syscall_push_regs() 
 {
     __asm__ __volatile__(
                          "pushl %eax\n"
@@ -30,7 +30,7 @@ __attribute__((naked)) void syscall_push_regs()
 }
 
 /* Unused for now */
-__attribute__((naked)) void syscall_pop_regs() 
+__attribute__((naked)) static void syscall_pop_regs() 
 {
     __asm__ __volatile__(
                          "addl $4, %esp\n"
@@ -53,23 +53,23 @@ __attribute__((naked)) void syscall_pop_regs()
 }
 
 /* Callback for handling all syscalls */
-void syscall_callback(i_register_t registers) 
+static void syscall_cb(i_register_t registers) 
 {
     // check that eax does not overflow max syscalls
     if (registers.eax > (SYSCALL_MAX - 1)) {
-        panic("Invalid syscall.");
+        __panic("Invalid syscall.");
     }
 
     // lookup syscall from table and call
     syscall_entries[registers.eax](&registers);
 }
 
-void syscall_init() 
-{
-    register_interrupt_handler(128, syscall_callback); 
-}
+/* 
+ * Begin syscall definitions
+ */
 
-void __syscall_write(i_register_t* registers)
+/* write(), writes to a file descriptor (fd) */
+static void __write(i_register_t* registers)
 {   
     // get syscall parameters from registers struct
     int fd = registers->ebx;
@@ -77,13 +77,19 @@ void __syscall_write(i_register_t* registers)
     size_t n = registers->edx;
 
     // check for standard file descriptors
-    if (fd == STDIN_FD) panic("stdin not yet supported.");
+    if (fd == STDIN_FD) __panic("stdin not yet supported.");
     else if (fd == STDOUT_FD) tty_write(buffer);            // redirect stdout to tty for now
     else if (fd == STDERR_FD) printk("stderr: Error %s\n");
 }
 
-void __syscall_open(i_register_t* registers)
+/* open(), writes to a file descriptor (fd) */
+void __open(i_register_t* registers)
 {
     printk("syscall open()\n");
 }
 
+/* Init syscall callbacks */
+void syscall_init() 
+{
+    register_interrupt_handler(128, syscall_cb); 
+}

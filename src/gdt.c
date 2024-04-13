@@ -4,6 +4,21 @@
 static gdt_entry_t gdt_entries[GDT_ENTRIES];
 static gdtr_t gdt_ptr;
 
+/* Sets an entry in the global descriptor table (GDT) */
+static void set_gdt_entry(uint32_t index, uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity) 
+{
+    gdt_entries[index].base_low = GDT_BASE_LOW(base);
+    gdt_entries[index].base_mid = GDT_BASE_MID(base);
+    gdt_entries[index].base_high = GDT_BASE_HIGH(base);
+
+    gdt_entries[index].limit = GDT_LIMIT(limit);
+    gdt_entries[index].flags = GDT_FLAGS(limit);
+    gdt_entries[index].flags |= GDT_GRANULARITY(granularity);
+    
+    gdt_entries[index].access = access;
+}
+
+/* Init GDT by setting all segments and calling extern load_gdt (asm) */
 void gdt_init() 
 {
     gdt_ptr.limit = (sizeof(gdt_entries) * GDT_ENTRIES) - 1;
@@ -20,15 +35,3 @@ void gdt_init()
     BOOT_LOG("GDT Loaded.")
 }
 
-void set_gdt_entry(uint32_t index, uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity) 
-{
-    gdt_entries[index].base_low = GDT_BASE_LOW(base);
-    gdt_entries[index].base_mid = GDT_BASE_MID(base);
-    gdt_entries[index].base_high = GDT_BASE_HIGH(base);
-
-    gdt_entries[index].limit = GDT_LIMIT(limit);
-    gdt_entries[index].flags = GDT_FLAGS(limit);
-    gdt_entries[index].flags |= GDT_GRANULARITY(granularity);
-    
-    gdt_entries[index].access = access;
-}

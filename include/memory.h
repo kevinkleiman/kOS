@@ -48,6 +48,12 @@ typedef union {
 
 void memory_init(volatile multiboot_info_t* mbd);
 
+/* Invalidate a page of PAGE_SIZE */
+static inline void __invlpg(uint32_t vaddr)
+{
+    __asm__ __volatile__ ("invlpg %0" :: "m"(vaddr));
+}
+
 extern page_dir_t initial_page_dir;
 
 extern uint32_t _kernel_start;

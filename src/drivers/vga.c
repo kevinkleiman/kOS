@@ -53,7 +53,7 @@ void vga_setbar(vga_color_t fg, vga_color_t bg, const char* str, size_t offset)
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
     uint16_t color = vga_entry_color(fg, bg);
 
-    size_t len = strlen(str);
+    size_t len = __strlen(str);
 
     for (size_t i = 0; i < VGA_WIDTH; ++i) {
         if (i >= offset && i < (offset + len)) {

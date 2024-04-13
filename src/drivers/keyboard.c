@@ -30,10 +30,11 @@ const uint32_t uppercase[128] = {
 
 bool caps;
 bool caps_lock;
+
 static char keybuffer[256];
 static char prevkb[256];
 
-void keyboard_callback(__attribute__((unused)) i_register_t registers) {
+static void __keyboard_cb(__attribute__((unused)) i_register_t registers) {
     unsigned char scan = inb(0x60) & 0x7F;
     unsigned char pressed = inb(0x60) & 0x80;
 
@@ -59,14 +60,14 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
         case 96:
             // TODO: this is fucked up
             if (pressed == 0) {
-                strncpy(keybuffer, prevkb, sizeof(keybuffer));
+                __strncpy(keybuffer, prevkb, sizeof(keybuffer));
                 tty_write(keybuffer);
             }
             break;
         case 28:
             if (pressed == 0) {
                 tty_putc(lowercase[scan]);
-                strncpy(prevkb, keybuffer, sizeof(prevkb));
+                __strncpy(prevkb, keybuffer, sizeof(prevkb));
 
                 // kernel cli for interpreting basic commands
                 kcli(keybuffer, sizeof(keybuffer));
@@ -90,11 +91,11 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
         default:
             if (pressed == 0) {
                 if (caps || caps_lock) {
-                    keybuffer[strlen(keybuffer)] = uppercase[scan];
+                    keybuffer[__strlen(keybuffer)] = uppercase[scan];
 
                     tty_putc(uppercase[scan]);
                 } else {
-                    keybuffer[strlen(keybuffer)] = lowercase[scan];
+                    keybuffer[__strlen(keybuffer)] = lowercase[scan];
 
                     tty_putc(lowercase[scan]);
                 }
@@ -103,7 +104,7 @@ void keyboard_callback(__attribute__((unused)) i_register_t registers) {
 }
 
 void keyboard_init() {
-    register_interrupt_handler(IRQ1, keyboard_callback);
+    register_interrupt_handler(IRQ1, __keyboard_cb);
 
     BOOT_LOG("Keyboard initialized.")
 }

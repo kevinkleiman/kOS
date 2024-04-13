@@ -24,6 +24,6 @@ pub extern "C" fn __init() -> u32 {
 }
 
 #[panic_handler]
-fn _panic(_info: &PanicInfo) -> ! {
-    cdef::panic("RPANIC!\0");
+fn panic(_info: &PanicInfo) -> ! {
+    cdef::__panic("RPANIC!\0");
 }

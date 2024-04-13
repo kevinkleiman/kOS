@@ -36,6 +36,5 @@ typedef struct {
 } __attribute__((packed)) gdtr_t;
 
 void gdt_init();
-void set_gdt_entry(uint32_t index, uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity);
 
 extern void load_gdt(gdtr_t*);

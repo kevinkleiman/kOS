@@ -7,9 +7,9 @@ INCLUDEDIR := ./include
 
 RUSTTARGET := x86_64-kos
 RUSTBIN := ./lib/target
-RUSTENTRY := $(RUSTBIN)/$(RUSTTARGET)/debug/libkOS.a
+RUSTENTRY := $(RUSTBIN)/$(RUSTTARGET)/debug/libkr.a
 
-CC := i686-elf
+CC := i386-elf
 ASC := nasm -f elf32
 EMU := qemu-system-i386
 
@@ -23,12 +23,12 @@ default:
 		$(ASC) $(ASMDIR)/boot.S -o $(OBJECTDIR)/boot.o
 		$(ASC) $(ASMDIR)/gdt.S -o $(OBJECTDIR)/_gdt.o
 		$(ASC) $(ASMDIR)/idt.S -o $(OBJECTDIR)/_idt.o
-		$(CC)-gcc -I $(INCLUDEDIR) -c $(CTARGETS) -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+		gcc -m32 -I $(INCLUDEDIR) -c $(CTARGETS) -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 
 		mv ./*.o $(OBJECTDIR)
 		CARGO_TARGET_DIR=$(RUSTBIN) cargo build --target ./lib/$(RUSTTARGET).json
 
-		$(CC)-gcc -T linker.ld -o $(BOOTDIR)/$(KERNELTARGET).bin -ffreestanding -O2 -nostdlib $(OBJECTS) $(RUSTENTRY) -lgcc
+		gcc -m32 -T linker.ld -o $(BOOTDIR)/$(KERNELTARGET).bin -ffreestanding -O2 -nostdlib $(OBJECTS) $(RUSTENTRY) -lgcc
 
 env:
 		docker build env -t kos

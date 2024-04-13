@@ -22,13 +22,8 @@ void memory_init(volatile multiboot_info_t* mbd)
 }
 
 /* Init physical memory manager */
-void pmm_init()
+static void __pmm_init()
 {
     page_directory[1].data = PTE_ENTRY(0x0, SUP_RW_PRESENT);
 }
 
-/* Invalidate a page of PAGE_SIZE */
-static inline void invalidate_page(uint32_t vaddr)
-{
-    __asm__ __volatile__ ("invlpg %0" :: "m"(vaddr));
-}

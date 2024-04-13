@@ -47,7 +47,7 @@ static const char* exception_messages[] = {
 
 extern void load_idt(idtr_t*);
 
-void pic_init() 
+static void pic_init() 
 {
     // setup master and slave PIC
     outb(PIC_CMD_PORT_MASTER, 0x11);
@@ -140,7 +140,7 @@ void idt_init()
 
     // check if interrupts are successfully enabled
     // if not, halt execution
-    if (!check_interrupts_enabled()) panic("Interrupt checks failed!");
+    if (!__check_interrupts_enabled()) __panic("Interrupt checks failed!");
 }
 
 void register_interrupt_handler(uint8_t index, isr_t handler) 

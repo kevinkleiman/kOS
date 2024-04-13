@@ -8,7 +8,7 @@
 
 
 /* Converts int to ascii representation (used for printing) */
-char* itoa(int value, char* str, int base) 
+char* __itoa(int value, char* str, int base) 
 {
     char* rc;
     char* ptr;
@@ -62,7 +62,7 @@ char* itoa(int value, char* str, int base)
 }
 
 /* Put string */
-void puts(const char* str)
+void __puts(const char* str)
 {
     tty_write(str);
 }
@@ -95,14 +95,14 @@ void printk(const char* fmt, ...)
         switch(c) {
             case 'd':
                 // handle int to ascii conversion
-                itoa(va_arg(ap, int), buffer, DECIMAL);
+                __itoa(va_arg(ap, int), buffer, DECIMAL);
 
                 // write filled buffer
                 tty_write(buffer);
                 break;
             case 'x':
                 // handle hex conversion
-                itoa(va_arg(ap, int), buffer, HEX);
+                __itoa(va_arg(ap, int), buffer, HEX);
                 
                 // write prefix "0x" with filled buffer
                 tty_write("0x");
@@ -156,15 +156,15 @@ void sprintk(const char* fmt, char* buffer, ...)
         switch(c) {
             case 'd':
                 // handle int to ascii conversion
-                itoa(va_arg(ap, int), buffer, DECIMAL);
+                __itoa(va_arg(ap, int), buffer, DECIMAL);
                 break;
             case 'x':
                 {
                     char* tmp;
                     // handle hex conversion
-                    itoa(va_arg(ap, int), tmp, HEX);
+                    __itoa(va_arg(ap, int), tmp, HEX);
 
-                    strcat(buffer, tmp); 
+                    __strcat(buffer, tmp); 
                     break;
                 }
             case 'c':
@@ -189,9 +189,20 @@ void sprintk(const char* fmt, char* buffer, ...)
     }
 }
 
+/* A very minimal, shitty cli for kernel ops */
+void kcli(char pkeybuffer[], size_t bufsize)
+{
+   if (__strcmp(pkeybuffer, "clear")) {
+        tty_clear();
+    } 
+
+    tty_writecolor("> ", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
+
+    __memset(pkeybuffer, 0, bufsize);
+}
 
 /* Kernel memset, nearly identical to glibc implementation */
-void* memset(void* dest, register int data, register size_t length) 
+void* __memset(void* dest, register int data, register size_t length) 
 {
     // Cast destination pointer to char pointer to dereference later
     unsigned char* ptr = (unsigned char*) dest;
@@ -206,20 +217,8 @@ void* memset(void* dest, register int data, register size_t length)
     return dest;
 }
 
-/* A very minimal, shitty cli for kernel ops */
-void kcli(char pkeybuffer[], size_t bufsize)
-{
-   if (strcmp(pkeybuffer, "clear")) {
-        tty_clear();
-    } 
-
-    tty_writecolor("> ", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
-
-    memset(pkeybuffer, 0, bufsize);
-}
-
 /* Kernel panic/exception handler, nothing fancy */
-__attribute__((noreturn)) void panic(char* msg)
+__attribute__((noreturn)) void __panic(char* msg)
 {
     vga_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
     // generic error handler
