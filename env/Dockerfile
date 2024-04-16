@@ -1,4 +1,4 @@
-FROM randomdude/gcc-cross-x86_64-elf
+FROM jdesmedt/crosscompile-i686-elf 
 
 RUN apt-get update 
 RUN apt-get upgrade -y
