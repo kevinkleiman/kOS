@@ -55,9 +55,9 @@ typedef struct multiboot_info {
     uint16_t vbe_interface_seg;
     uint16_t vbe_interface_off;
     uint16_t vbe_interface_len;
-} multiboot_info_t;
+} __attribute__((packed)) multiboot_info_t;
 
-typedef struct multiboot_mmap_entry {
+struct multiboot_mmap_entry {
   uint32_t size;
   uint32_t addr_low;
   uint32_t addr_high;
@@ -69,4 +69,5 @@ typedef struct multiboot_mmap_entry {
 #define MULTIBOOT_MEMORY_NVS                    4
 #define MULTIBOOT_MEMORY_BADRAM                 5
   uint32_t type;
-} __attribute__((packed)) multiboot_mmap_entry_t;
+} __attribute__((packed));
+typedef struct multiboot_mmap_entry multiboot_memory_map_t;
