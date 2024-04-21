@@ -19,7 +19,6 @@
 #include "drivers/keyboard.h"
 #include "drivers/rtc.h"
 #include "drivers/pit.h"
-#include "drivers/ata.h"
 #include "gdt.h"
 #include "syscall.h"
 #include "multiboot.h"
@@ -49,7 +48,6 @@ void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info
     // init syscalls after interrupts setup
     syscall_init();
 
-    ata_init();
     // print ascii art welcome message
     tty_welcome();
 

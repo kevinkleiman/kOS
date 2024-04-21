@@ -1,16 +1,6 @@
 #include "drivers/ata.h"
-#include "stdio.h"
 #include "io.h"
 
-
-void ata_init()
-{
-    uint16_t* buffer;
-
-    rw_sectors(READ_SECTORS, SLAVE_DRIVE, 1, 0x0, (void*) buffer);
-
-    printk("\nDisk Sector Read: %x\n", *buffer);
-}
 
 /* Get drive status */
 drive_status_t drive_status(uint8_t drive)

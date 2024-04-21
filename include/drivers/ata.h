@@ -37,7 +37,6 @@ typedef enum {
 
 } drive_status_t;
 
-void ata_init();
 void delay_400ns();
 void select_drive(uint8_t bus, uint8_t dn);
 void rw_sectors(uint8_t mode, uint8_t drive, uint32_t sector_count, uint32_t lba, void* dest);
