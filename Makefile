@@ -12,7 +12,7 @@ RUSTENTRY := $(RUSTBIN)/$(RUSTTARGET)/debug/libkOS.a
 CC := i686-elf
 dCC := docker run -it --rm -v .:/root/env kos
 ASC := nasm -f elf32
-EMU := qemu-system-i386
+EMU := qemu-system-i386 -hda
 
 OBJECTS := $(OBJECTDIR)/*.o
 CTARGETS := $(SRCDIR)/*.c $(DRIVERSDIR)/*.c
@@ -44,7 +44,7 @@ grub:
 		grub-mkrescue -o $(OBJECTDIR)/$(KERNELTARGET).iso multiboot
 
 run:
-		$(EMU) $(OBJECTDIR)/$(KERNELTARGET).iso
+		$(EMU) $(OBJECTDIR)/$(KERNELTARGET).iso -hdb fs.img
 
 clean:
 		rm -rf $(OBJECTDIR)/*.*
