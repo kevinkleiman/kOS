@@ -16,9 +16,16 @@ void memory_init(volatile multiboot_info_t* mbd)
     uint32_t mem_high = mbd->mem_upper;
     uint32_t phys_alloc_start = (mem_high + 0xFFF) & ~0xFFF;
 
-    printk("initial_page_dir->data %x\n", initial_page_dir.page_dir.pt_addr);
+    if(!mbd->flags >> 6 & 0x1) {
+        __panic("Invalid mmap!");
+    }
 
-    multiboot_mmap_entry_t* tmp = (multiboot_mmap_entry_t*) mbd->mmap_addr;
+    for(uint32_t i = 0; i < mbd->mmap_length; i += sizeof(multiboot_memory_map_t)) {
+        multiboot_memory_map_t* mbentry = (multiboot_memory_map_t*) (mbd->mmap_addr + i);
+
+        // do something with memory map
+        // printk("ENTRY: low=%x len_low=%x type=%d\n", mbentry->addr_low, mbentry->len_low, mbentry->type);
+    }
 }
 
 /* Init physical memory manager */
