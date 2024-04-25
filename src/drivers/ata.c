@@ -1,16 +1,6 @@
 #include "drivers/ata.h"
-#include "stdio.h"
 #include "io.h"
 
-
-void ata_init()
-{
-    uint16_t* buf;
-    select_drive(ATA_MASTER, ATA_MASTER);
-    read_sectors(2, 0x0, (void*) buf);
-
-    printk("Sectors=%x\n", buf);
-}
 
 /* Get drive status */
 drive_status_t drive_status(uint8_t drive)
@@ -44,9 +34,15 @@ void delay_400ns()
 }
 
 /* Read n sectors from disk */
-void read_sectors(uint32_t sector_count, uint32_t lba, void* dest)
+void rw_sectors(
+    uint8_t mode,
+    uint8_t drive,
+    uint32_t sector_count,
+    uint32_t lba,
+    void* dest
+)
 {
-    outb(DRIVE_SEL, 0xE0 | (uint8_t) ((lba >> 24) & 0xF));
+    outb(DRIVE_SEL, drive | (uint8_t) ((lba >> 24) & 0xF));
     outb(FEATURES, 0x0);
     outb(SECT_CNT, sector_count);
     outb(SECT_NUM, (uint8_t) lba);
