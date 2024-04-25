@@ -1,9 +1,15 @@
 #include "drivers/ata.h"
+#include "stdio.h"
 #include "io.h"
 
 
 void ata_init()
 {
+    uint16_t* buf;
+    select_drive(ATA_MASTER, ATA_MASTER);
+    read_sectors(2, 0x0, (void*) buf);
+
+    printk("Sectors=%x\n", buf);
 }
 
 /* Get drive status */

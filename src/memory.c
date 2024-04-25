@@ -24,7 +24,7 @@ void memory_init(volatile multiboot_info_t* mbd)
         multiboot_memory_map_t* mbentry = (multiboot_memory_map_t*) (mbd->mmap_addr + i);
 
         // do something with memory map
-        // printk("ENTRY: low=%x len_low=%x type=%d\n", mbentry->addr_low, mbentry->len_low, mbentry->type);
+        printk("ENTRY: low=%x len_low=%x type=%d\n", mbentry->addr_low, mbentry->len_low, mbentry->type);
     }
 }
 

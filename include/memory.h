@@ -46,6 +46,14 @@ typedef union {
     } pte;
 } pte_t;
 
+struct freelist {
+    struct freelist* next;
+};
+
+typedef struct {
+    struct freelist* freelist;
+} mmap_t;
+
 void memory_init(volatile multiboot_info_t* mbd);
 
 /* Invalidate a page of PAGE_SIZE */
