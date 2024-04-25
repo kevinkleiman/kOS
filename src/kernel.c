@@ -19,11 +19,10 @@
 #include "drivers/keyboard.h"
 #include "drivers/rtc.h"
 #include "drivers/pit.h"
-#include "drivers/ata.h"
 #include "gdt.h"
 #include "syscall.h"
 #include "multiboot.h"
-#include "memory.h"
+#include "pmm.h"
 
 
 /* Kernel entry point (init hardware and drivers) */
@@ -44,12 +43,10 @@ void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info
     keyboard_init();
 
     // init memory map
-    memory_init(mbd);
+    pmm_init(mbd);
 
     // init syscalls after interrupts setup
     syscall_init();
-
-    ata_init();
 
     // print ascii art welcome message
     tty_welcome();
