@@ -4,8 +4,6 @@ SECTIONS
 {
     . = 0x00100000;
 
-    _kernel_start = .;
-
 	.multiboot BLOCK(4K) : ALIGN(4K)
 	{
 		*(.multiboot)
@@ -17,6 +15,7 @@ SECTIONS
     }
 
     . += 0xC0000000;
+    _kernel_start = .;
 
 	.text ALIGN(4K) : AT(ADDR(.text) - 0xC0000000)
 	{
@@ -40,7 +39,7 @@ SECTIONS
 	{
 		*(COMMON)
 		*(.bss)
+        _kernel_end = .;
 	}
 
-    _kernel_end = .;
 }

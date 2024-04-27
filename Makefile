@@ -14,13 +14,18 @@ dCC := docker run -it --rm -v .:/root/env kos
 ASC := nasm -f elf32
 EMU := qemu-system-i386 -hda
 
+KERNELTARGET := kos
 OBJECTS := $(OBJECTDIR)/*.o
 CTARGETS := $(SRCDIR)/*.c $(DRIVERSDIR)/*.c
 ASMTARGETS := $(ASMDIR)/*.S
+ISO := $(OBJECTDIR)/$(KERNELTARGET).iso
 
-KERNELTARGET := kos
 
-default:
+.PHONY: all kernel env image verify grub run clean
+
+all: clean kernel image run
+
+kernel:
 		$(ASC) $(ASMDIR)/boot.S -o $(OBJECTDIR)/boot.o
 		$(ASC) $(ASMDIR)/gdt.S -o $(OBJECTDIR)/_gdt.o
 		$(ASC) $(ASMDIR)/idt.S -o $(OBJECTDIR)/_idt.o
@@ -34,7 +39,7 @@ default:
 env:
 		docker build env -t kos
 
-image: 
+image: $(OBJECTS) 
 		docker run -it --rm -v .:/root/env kos make grub
 
 verify:
@@ -43,8 +48,8 @@ verify:
 grub:
 		grub-mkrescue -o $(OBJECTDIR)/$(KERNELTARGET).iso multiboot
 
-run:
-		$(EMU) $(OBJECTDIR)/$(KERNELTARGET).iso -hdb fs.img
+run: $(ISO)
+		sudo $(EMU) $(ISO) -hdb fs.img
 
 clean:
 		rm -rf $(OBJECTDIR)/*.*

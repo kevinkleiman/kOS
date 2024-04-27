@@ -4,6 +4,7 @@
 #include "stdio.h"
 #include "memory.h"
 
+/* Get initial page directory defined in boot.S */
 static page_dir_t page_directory[PD_ENTRIES] __attribute__((aligned(PG_SIZE)));
 
 /* Init physical memory manager */
