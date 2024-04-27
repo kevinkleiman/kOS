@@ -28,8 +28,8 @@ const uint32_t uppercase[128] = {
 };
 
 
-bool caps;
-bool caps_lock;
+static bool caps;
+static bool caps_lock;
 
 static char keybuffer[256];
 static char prevkb[256];
