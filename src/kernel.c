@@ -26,7 +26,7 @@
 
 
 /* Kernel entry point (init hardware and drivers) */
-void kernel_main(__attribute__((unused)) uint32_t magic, volatile multiboot_info_t* mbd) 
+void kernel_main(__attribute__((used)) uint32_t magic, volatile multiboot_info_t* mbd) 
 {
     // init kernel tty
     tty_init();

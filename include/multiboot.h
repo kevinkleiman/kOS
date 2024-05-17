@@ -1,4 +1,22 @@
+/**
+ * 
+ * @copyright Copyright (c) 2024, Kevin Kleiman, All Rights Reserved
+ * 
+ * This is the kernel for yet another hobbyOS designed and developed by Kevin Kleiman.
+ * Feel free to copy, use, edit, etc. anything you see 
+ *
+ * This was originally designed to try writing a ring0 math library but I soon realized,
+ * I should just make a full-blown kernel. It has been a great learning experience and I
+ * implore anyone even remotely interested to fork, play around, contribute, whatever
+ * you want. 
+ *
+ * For now, it's pretty barebones and shitty, but hopefully that will change with time.
+ * Have fun creating kOS (pronounced "Chaos")
+ */
+
 #pragma once
+
+#include <stdint.h>
 
 /**
  * Multiboot struct definitions for reading memory map from GRUB
@@ -6,8 +24,6 @@
  * This was loosely copied from the multiboot header defined
  * here: https://www.gnu.org/software/grub/manual/multiboot/html_node/multiboot_002eh.html
 */
-
-#include <stdint.h>
 
 typedef struct multiboot_aout_symbol_table {
   uint32_t tabsize;
