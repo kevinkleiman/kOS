@@ -210,7 +210,9 @@ void kcli(char pkeybuffer[], size_t bufsize)
 {
    if (__strcmp(pkeybuffer, "clear")) {
         tty_clear();
-    } 
+    } else if (__strcmp(pkeybuffer, "art")) {
+        tty_welcome();
+    }
 
     tty_writecolor("> ", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
 
