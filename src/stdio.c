@@ -25,7 +25,8 @@
 
 
 /* Converts int to ascii representation (used for printing) */
-char* __itoa(int value, char* str, int base) 
+char* 
+kitoa(int value, char* str, int base) 
 {
     char* rc;
     char* ptr;
@@ -79,13 +80,15 @@ char* __itoa(int value, char* str, int base)
 }
 
 /* Put string */
-void __puts(const char* str)
+void 
+kputs(const char* str)
 {
     tty_write(str);
 }
 
 /* Kernel printf targeting tty output */
-void printk(const char* fmt, ...) 
+void 
+printk(const char* fmt, ...) 
 {
     // init args and string buffer
     va_list ap;
@@ -112,14 +115,14 @@ void printk(const char* fmt, ...)
         switch(c) {
             case 'd':
                 // handle int to ascii conversion
-                __itoa(va_arg(ap, int), buffer, DECIMAL);
+                kitoa(va_arg(ap, int), buffer, DECIMAL);
 
                 // write filled buffer
                 tty_write(buffer);
                 break;
             case 'x':
                 // handle hex conversion
-                __itoa(va_arg(ap, int), buffer, HEX);
+                kitoa(va_arg(ap, int), buffer, HEX);
                 
                 // write prefix "0x" with filled buffer
                 tty_write("0x");
@@ -147,7 +150,8 @@ void printk(const char* fmt, ...)
 }
 
 /* WIP */
-void sprintk(const char* fmt, char* buffer, ...) 
+void 
+sprintk(const char* fmt, char* buffer, ...) 
 {
     // init args and string buffer
     va_list ap;
@@ -173,15 +177,15 @@ void sprintk(const char* fmt, char* buffer, ...)
         switch(c) {
             case 'd':
                 // handle int to ascii conversion
-                __itoa(va_arg(ap, int), buffer, DECIMAL);
+                kitoa(va_arg(ap, int), buffer, DECIMAL);
                 break;
             case 'x':
                 {
                     char* tmp;
                     // handle hex conversion
-                    __itoa(va_arg(ap, int), tmp, HEX);
+                    kitoa(va_arg(ap, int), tmp, HEX);
 
-                    __strcat(buffer, tmp); 
+                    kstrcat(buffer, tmp); 
                     break;
                 }
             case 'c':
@@ -207,23 +211,25 @@ void sprintk(const char* fmt, char* buffer, ...)
 }
 
 /* A very minimal, shitty cli for kernel ops */
-void kcli(char pkeybuffer[], size_t bufsize)
+void 
+kcli(char pkeybuffer[], size_t bufsize)
 {
-    if (__strcmp(pkeybuffer, "clear")) {
+    if (kstrcmp(pkeybuffer, "clear")) {
         tty_clear();
-    } else if (__strcmp(pkeybuffer, "art")) {
+    } else if (kstrcmp(pkeybuffer, "art")) {
         tty_welcome();
-    } else if (__strcmp(pkeybuffer, "memmap")) {
+    } else if (kstrcmp(pkeybuffer, "memmap")) {
         
     }
 
     tty_writecolor("> ", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
 
-    __memset(pkeybuffer, 0, bufsize);
+    kmemset(pkeybuffer, 0, bufsize);
 }
 
 /* Kernel memset, nearly identical to glibc implementation */
-void* __memset(void* dest, register int data, register size_t length) 
+void* 
+kmemset(void* dest, register int data, register size_t length) 
 {
     // Cast destination pointer to char pointer to dereference later
     unsigned char* ptr = (unsigned char*) dest;
@@ -239,7 +245,8 @@ void* __memset(void* dest, register int data, register size_t length)
 }
 
 /* Kernel panic/exception handler, nothing fancy */
-__attribute__((noreturn)) void __panic(char* msg)
+__attribute__((noreturn)) void 
+kpanic(char* msg)
 {
     vga_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
     // generic error handler

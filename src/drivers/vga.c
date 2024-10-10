@@ -21,19 +21,22 @@
 static uint16_t g_vga_color;
 
 /* Sets color entry for VGA buffer */
-void vga_setcolor(vga_color_t fg, vga_color_t bg) 
+void 
+vga_setcolor(vga_color_t fg, vga_color_t bg) 
 {
     g_vga_color = vga_entry_color(fg, bg);
 }
 
 /* For now, just clear the screen on init (also sets default color) */
-void vga_init() 
+void 
+vga_init() 
 {
     vga_clear();
 }
 
 /* Puts a character into the VGA buffer at row, col */
-void vga_putc(char c, size_t row, size_t col) 
+void 
+vga_putc(char c, size_t row, size_t col) 
 {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
     
@@ -42,7 +45,8 @@ void vga_putc(char c, size_t row, size_t col)
 }
 
 /* Shift VGA buffer one column down */
-void vga_scroll()
+void 
+vga_scroll()
 {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
 
@@ -64,12 +68,13 @@ void vga_scroll()
     }
 }
 
-void vga_setbar(vga_color_t fg, vga_color_t bg, const char* str, size_t offset)
+void 
+vga_setbar(vga_color_t fg, vga_color_t bg, const char* str, size_t offset)
 {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
     uint16_t color = vga_entry_color(fg, bg);
 
-    size_t len = __strlen(str);
+    size_t len = kstrlen(str);
 
     for (size_t i = 0; i < VGA_WIDTH; ++i) {
         if (i >= offset && i < (offset + len)) {
@@ -81,7 +86,8 @@ void vga_setbar(vga_color_t fg, vga_color_t bg, const char* str, size_t offset)
 }
 
 /* Clear VGA buffer */
-void vga_clear() 
+void 
+vga_clear() 
 {
     uint16_t* vga_buffer = (uint16_t*) VGA_BASE;
 
@@ -95,7 +101,8 @@ void vga_clear()
 }
 
 /* Disalbes cursor */
-void vga_cursor_disable() 
+void 
+vga_cursor_disable() 
 {
     // disable cursor by writing to 0x3d4 and 0x3d5
     outb(0x3D4, 0x0A);
@@ -115,7 +122,8 @@ void vga_cursor_enable(uint8_t start, uint8_t end)
 }
 
 /* Update cursor to new x, y pos (row, col for tty) */
-void vga_update_cursor(int x, int y)
+void 
+vga_update_cursor(int x, int y)
 {
 	uint16_t pos = y * VGA_WIDTH + x;
  
@@ -126,7 +134,8 @@ void vga_update_cursor(int x, int y)
 }
 
 /* Gets cursor position and returns struct of cursor_pos_t (x, y) */
-cursor_pos_t vga_get_cursor_position() 
+cursor_pos_t 
+vga_get_cursor_position() 
 {
     uint16_t pos = 0;
     cursor_pos_t cursor_pos;

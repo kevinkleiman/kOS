@@ -19,7 +19,8 @@
 
 
 /* Get drive status */
-drive_status_t drive_status(uint8_t drive)
+drive_status_t 
+drive_status(uint8_t drive)
 {
     uint8_t status = inb(STATUS);
 
@@ -32,7 +33,8 @@ drive_status_t drive_status(uint8_t drive)
 }
 
 /* Select a drive to read/write */
-void select_drive(uint8_t bus, uint8_t dn)
+void 
+select_drive(uint8_t bus, uint8_t dn)
 {
     if(bus == ATA_MASTER) {
         if(dn == ATA_MASTER) outb(DRIVE_SEL, MASTER_DRIVE);
@@ -44,13 +46,15 @@ void select_drive(uint8_t bus, uint8_t dn)
 }
 
 /* Wait 400 nano seconds for read delay */
-void delay_400ns()
+void 
+delay_400ns()
 {
     for (int i = 0; i < 4; i++);
 }
 
 /* Read n sectors from disk */
-void rw_sectors(
+void 
+rw_sectors(
     uint8_t mode,
     uint8_t drive,
     uint32_t sector_count,

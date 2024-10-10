@@ -62,9 +62,11 @@ static const char* exception_messages[] = {
     "Reserved"
 };
 
-extern void load_idt(idtr_t*);
+extern void 
+load_idt(idtr_t*);
 
-static void pic_init() 
+static void 
+__pic_init() 
 {
     // setup master and slave PIC
     outb(PIC_CMD_PORT_MASTER, 0x11);
@@ -87,7 +89,8 @@ static void pic_init()
     outb(PIC_DATA_PORT_MASTER, 0x7C);
 }
 
-void idt_init() 
+void 
+idt_init() 
 {
     // setup idt register data structure
     idtr.limit = (uint16_t) (sizeof(idt) * 256) - 1;
@@ -130,7 +133,7 @@ void idt_init()
     idt_set_gate(177, (uint32_t) isr177);
 
     // init programmable interrupt controller (PIC)
-    pic_init();
+    __pic_init();
 
     // set IRQ gates
     idt_set_gate(32, (uint32_t) irq0);
@@ -159,13 +162,15 @@ void idt_init()
     KASSERT(!__check_interrupts_enabled(), "Interrupt init fail!");
 }
 
-void register_interrupt_handler(uint8_t index, isr_t handler) 
+void 
+register_interrupt_handler(uint8_t index, isr_t handler) 
 {
     // set interrupt handler entry in table
     interrupt_handlers[index] = handler;
 }
 
-void isr_handler(i_register_t registers) 
+void 
+isr_handler(i_register_t registers) 
 {
     // handle ISR exceptions
     if (registers.int_no < 32) {
@@ -186,7 +191,8 @@ void isr_handler(i_register_t registers)
     }
 }
 
-void irq_handler(i_register_t registers) 
+void 
+irq_handler(i_register_t registers) 
 {
     // call IRQ handler associated with interrupt number
     if (interrupt_handlers[registers.int_no] != 0) {
@@ -199,7 +205,8 @@ void irq_handler(i_register_t registers)
     outb(PIC_CMD_PORT_MASTER, 0x20);
 }
 
-void idt_set_gate(uint8_t index, uint32_t handler) 
+void 
+idt_set_gate(uint8_t index, uint32_t handler) 
 {
     // setup IDT gate, permissions, offset, etc.
     idt[index].isr_low = handler & 0xFFFF;

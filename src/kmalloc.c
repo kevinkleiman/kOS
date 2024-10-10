@@ -17,11 +17,13 @@
 #include "kmalloc.h"
 
 
-void kmalloc_init() 
+void 
+kmalloc_init() 
 {
 }
 
-void* kmalloc(size_t size)
+void* 
+kmalloc(size_t size)
 {
     return (void *)0x0;
 }

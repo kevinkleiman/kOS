@@ -16,7 +16,8 @@
 
 #include "string.h"
 
-size_t __strlen(const char* str) 
+size_t 
+kstrlen(const char* str) 
 {
     // Assume length at zero
     size_t length = 0;
@@ -28,15 +29,17 @@ size_t __strlen(const char* str)
     return length;
 }
 
-void __strcpy(char* dest, const char* src) 
+void 
+kstrcpy(char* dest, const char* src) 
 {
     // Pretty loosey goosey way of doing this but fuck it
-    for (size_t i = 0; i < __strlen(src); ++i) {
+    for (size_t i = 0; i < kstrlen(src); ++i) {
         dest[i] = src[i];
     }
 }
 
-void __strncpy(char* dest, const char* src, size_t n) 
+void 
+kstrncpy(char* dest, const char* src, size_t n) 
 {
     // Pretty loosey goosey way of doing this but fuck it
     for (size_t i = 0; i < n; ++i) {
@@ -44,7 +47,8 @@ void __strncpy(char* dest, const char* src, size_t n)
     }
 }
 
-char* __strcat(char* dest, const char* append)
+char* 
+kstrcat(char* dest, const char* append)
 {
     // appends one string to another (concatination)
     char* save = dest;
@@ -56,11 +60,12 @@ char* __strcat(char* dest, const char* append)
 	return save;
 }
 
-bool __strcmp(const char* a, const char* b) 
+bool 
+kstrcmp(const char* a, const char* b) 
 {
     // Cache length of a and b
-    size_t a_len = __strlen(a);
-    size_t b_len = __strlen(b);
+    size_t a_len = kstrlen(a);
+    size_t b_len = kstrlen(b);
 
     // If lengths don't match, then strings are not the same
     if (a_len != b_len) return false;

@@ -26,10 +26,11 @@
 static page_dir_t page_directory[PD_ENTRIES] __attribute__((aligned(PAGE_SIZE)));
 
 /* Print memory regions from multiboot memory map */
-void display_mm()
+void 
+display_mm(multiboot_info_t* mbd)
 {
-    for (uint32_t i = 0; i < g_mbd->mmap_length; i += sizeof(multiboot_memory_map_t)) {
-        multiboot_memory_map_t* mbentry = (multiboot_memory_map_t*) (g_mbd->mmap_addr + i);
+    for (uint32_t i = 0; i < mbd->mmap_length; i += sizeof(multiboot_memory_map_t)) {
+        multiboot_memory_map_t* mbentry = (multiboot_memory_map_t*) (mbd->mmap_addr + i);
 
         printk("Region -- addr_low=%x addr_high=%x len_low=%x len_high=%x type=%d\n",
                mbentry->addr_low, mbentry->addr_high, mbentry->len_low, mbentry->len_high,
@@ -38,14 +39,15 @@ void display_mm()
 }
 
 /* Init physical memory manager */
-void pmm_init(volatile multiboot_info_t* mbd)
+void 
+pmm_init(volatile multiboot_info_t* mbd)
 {
     // set first page directory entry to initial directory
     page_directory[0] = initial_page_dir;
 
-    if (g_mbd == NULL)
+    if (mbd == NULL)
     {
-        g_mbd = (multiboot_info_t*) mbd;
+        mbd = (multiboot_info_t*) mbd;
     }
 
     uint32_t mem_high = mbd->mem_upper;
@@ -60,12 +62,14 @@ void pmm_init(volatile multiboot_info_t* mbd)
 }
 
 
-void* pm_alloc_frame()
+void* 
+pm_alloc_frame()
 {
     return (void*) 0x0;
 }
 
-int pm_free()
+int 
+pm_free()
 {
     return 0;
 }

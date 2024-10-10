@@ -21,7 +21,8 @@
 static tty_state_t tty_state;
 
 /* Init tty interface and set default color to white on black */
-void tty_init() 
+void 
+tty_init() 
 {
     // set foreground color to white, background to blue
     // feel free to change this
@@ -33,16 +34,18 @@ void tty_init()
 }
 
 /* Write a string to tty output, with row, col tracking */
-void tty_write(const char* str) 
+void 
+tty_write(const char* str) 
 {
     // loop through each character and putc to screen
-    for (size_t i = 0; i < __strlen(str); ++i) {
+    for (size_t i = 0; i < kstrlen(str); ++i) {
         // detect when a newline character is present
         tty_putc(str[i]);
     }
 }
 
-void tty_writecolor(const char* str, vga_color_t fg, vga_color_t bg) 
+void 
+tty_writecolor(const char* str, vga_color_t fg, vga_color_t bg) 
 {
     // set color to desired
     vga_setcolor(fg, bg);
@@ -54,7 +57,8 @@ void tty_writecolor(const char* str, vga_color_t fg, vga_color_t bg)
     vga_setcolor(tty_state.fgcolor, tty_state.bgcolor);
 }
 
-void tty_putc(char c)
+void 
+tty_putc(char c)
 {
     if (c != '\n') vga_putc(c, tty_state.row, tty_state.col);
 
@@ -74,7 +78,8 @@ void tty_putc(char c)
 }
 
 /* Clear screen and reset row, col pointers */
-void tty_clear() 
+void 
+tty_clear() 
 {
     // clear vga buffer
     vga_clear();
@@ -85,7 +90,8 @@ void tty_clear()
 }
 
 /* Set new color and store fg/bg colors in state */
-void tty_setcolor(vga_color_t fg, vga_color_t bg) 
+void 
+tty_setcolor(vga_color_t fg, vga_color_t bg) 
 {
     vga_setcolor(fg, bg);
 
@@ -94,7 +100,8 @@ void tty_setcolor(vga_color_t fg, vga_color_t bg)
 }
 
 /* Just a somewhat unecessary boot success message */
-void tty_welcome() 
+void 
+tty_welcome() 
 {
     // temporarily set text color to green
     vga_setcolor(VGA_COLOR_GREEN, tty_state.bgcolor);

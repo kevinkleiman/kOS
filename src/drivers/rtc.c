@@ -19,21 +19,24 @@
 #include "stdio.h"
 #include "io.h"
 
-bool cmos_update()
+bool 
+cmos_update()
 {
     outb(CMOS_BASE, 0x0A);
 
     return inb(CMOS_DATA) & 0x80;
 }
 
-unsigned char rtc_register(uint8_t rtc_reg)
+unsigned char 
+rtc_register(uint8_t rtc_reg)
 {
     outb(CMOS_BASE, rtc_reg);
 
     return inb(CMOS_DATA);
 }
 
-void rtc_callback()
+void 
+rtc_callback()
 {
     unsigned char day;
     unsigned char hour;
@@ -53,23 +56,10 @@ void rtc_callback()
         day = (day & 0x0F) + ((day / 16) * 10);
         month = (month & 0x0F) + ((month / 16) * 10);
     }
-
-    char* minbuf;
-    char* hourbuf;
-    char* daybuf;
-    char* monthbuf;
-
-    __itoa(minute, minbuf, DECIMAL);
-    __itoa(hour, hourbuf, DECIMAL);
-    __itoa(day, daybuf, DECIMAL);
-    __itoa(month, monthbuf, DECIMAL);
-
-    // char* outbuf;
-
-    // vga_setbar(VGA_COLOR_WHITE, VGA_COLOR_DARK_GREY, outbuf, 30);
 }
 
-void rtc_init()
+void 
+rtc_init()
 {
     // register_interrupt_handler(IRQ8, rtc_callback);
 

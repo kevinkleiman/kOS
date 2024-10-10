@@ -24,7 +24,8 @@
 static volatile uint32_t count_down;
 
 /* Decrement counter on clock edge */
-void pit_callback(__attribute__((unused)) i_register_t registers)
+void 
+pit_callback(__attribute__((unused)) i_register_t registers)
 {
     --count_down;
 
@@ -32,14 +33,16 @@ void pit_callback(__attribute__((unused)) i_register_t registers)
 }
 
 /* Global kernel sleep function, sleep for x milliseconds */
-void sleep(uint32_t millis)
+void 
+sleep(uint32_t millis)
 {
     count_down = millis;
 
     while (count_down > 0);
 }
 
-void pit_init()
+void 
+pit_init()
 {
     // set divisor for channel 0
     uint32_t divisor = FREQUENCY/RELOAD;
@@ -54,7 +57,8 @@ void pit_init()
     BOOT_LOG("PIT initialized.")
 }
 
-void poll()
+void 
+poll()
 {
     rtc_callback();
 }

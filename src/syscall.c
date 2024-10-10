@@ -27,7 +27,8 @@ static syscall_t syscall_entries[10] = {
 };
 
 /* Unused for now */
-__attribute__((naked, used)) static void syscall_push_regs() 
+__attribute__((naked, used)) static void 
+syscall_push_regs() 
 {
     __asm__ __volatile__(
                          "pushl %eax\n"
@@ -47,7 +48,8 @@ __attribute__((naked, used)) static void syscall_push_regs()
 }
 
 /* Unused for now */
-__attribute__((naked, used)) static void syscall_pop_regs() 
+__attribute__((naked, used)) static void 
+syscall_pop_regs() 
 {
     __asm__ __volatile__(
                          "addl $4, %esp\n"
@@ -70,7 +72,8 @@ __attribute__((naked, used)) static void syscall_pop_regs()
 }
 
 /* Callback for handling all syscalls */
-static void syscall_cb(i_register_t registers) 
+static void 
+syscall_cb(i_register_t registers) 
 {
     KASSERT(registers.eax > (SYSCALL_MAX - 1), "Invalid syscall!");
 
@@ -83,7 +86,8 @@ static void syscall_cb(i_register_t registers)
  */
 
 /* write(), writes to a file descriptor (fd) */
-static void __write(i_register_t* registers)
+static void 
+__write(i_register_t* registers)
 {   
     // get syscall parameters from registers struct
     int fd = registers->ebx;
@@ -98,13 +102,15 @@ static void __write(i_register_t* registers)
 }
 
 /* open(), writes to a file descriptor (fd) */
-void __open(i_register_t* registers)
+static void 
+__open(i_register_t* registers)
 {
     printk("syscall open()\n");
 }
 
 /* Init syscall callbacks */
-void syscall_init() 
+void 
+syscall_init() 
 {
     register_interrupt_handler(128, syscall_cb); 
 }

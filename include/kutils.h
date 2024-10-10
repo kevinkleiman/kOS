@@ -21,7 +21,7 @@
 
 /* Assert condition with panic failover */
 #define KASSERT(__cond, __s) \
-    do { if (__cond) { __panic(__s); } } while(0)
+    do { if (__cond) { kpanic(__s); } } while(0)
 
 /* Null typdef */
 #define NULL (void *) 0x0
