@@ -14,6 +14,7 @@
  * Have fun creating kOS (pronounced "Chaos")
  */
 
+#include "kutils.h"
 #include "pmm.h"
 #include "multiboot.h"
 #include "stddef.h"
@@ -22,13 +23,13 @@
 
 
 /* Get initial page directory defined in boot.S */
-static page_dir_t page_directory[PD_ENTRIES] __attribute__((aligned(PG_SIZE)));
+static page_dir_t page_directory[PD_ENTRIES] __attribute__((aligned(PAGE_SIZE)));
 
 /* Print memory regions from multiboot memory map */
-static void display_mm(volatile multiboot_info_t* mbd)
+void display_mm()
 {
-    for(uint32_t i = 0; i < mbd->mmap_length; i += sizeof(multiboot_memory_map_t)) {
-        multiboot_memory_map_t* mbentry = (multiboot_memory_map_t*) (mbd->mmap_addr + i);
+    for (uint32_t i = 0; i < g_mbd->mmap_length; i += sizeof(multiboot_memory_map_t)) {
+        multiboot_memory_map_t* mbentry = (multiboot_memory_map_t*) (g_mbd->mmap_addr + i);
 
         printk("Region -- addr_low=%x addr_high=%x len_low=%x len_high=%x type=%d\n",
                mbentry->addr_low, mbentry->addr_high, mbentry->len_low, mbentry->len_high,
@@ -41,22 +42,25 @@ void pmm_init(volatile multiboot_info_t* mbd)
 {
     // set first page directory entry to initial directory
     page_directory[0] = initial_page_dir;
-    page_directory[1] = initial_page_dir;
+
+    if (g_mbd == NULL)
+    {
+        g_mbd = (multiboot_info_t*) mbd;
+    }
 
     uint32_t mem_high = mbd->mem_upper;
     uint32_t phys_alloc_start = (mem_high + 0xFFF) & ~0xFFF;
     uint32_t size = 0;
 
-    if(!mbd->flags >> 6 & 0x1) {
-        __panic("Invalid mmap!");
-    }
+    KASSERT(!mbd->flags >> 6 & 0x1, "Corrupt memory map!");
 
-    for(uint32_t i = 0; i < mbd->mmap_length; i += sizeof(multiboot_memory_map_t)) {
+    for (uint32_t i = 0; i < mbd->mmap_length; i += sizeof(multiboot_memory_map_t)) {
         multiboot_memory_map_t* mbentry = (multiboot_memory_map_t*) (mbd->mmap_addr + i);
     }
 }
 
-void* pm_alloc()
+
+void* pm_alloc_frame()
 {
     return (void*) 0x0;
 }

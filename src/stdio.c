@@ -19,6 +19,7 @@
 #include "drivers/tty.h"
 #include "drivers/vga.h"
 #include "stdio.h"
+#include "pmm.h"
 #include "string.h"
 #include "io.h"
 
@@ -208,10 +209,12 @@ void sprintk(const char* fmt, char* buffer, ...)
 /* A very minimal, shitty cli for kernel ops */
 void kcli(char pkeybuffer[], size_t bufsize)
 {
-   if (__strcmp(pkeybuffer, "clear")) {
+    if (__strcmp(pkeybuffer, "clear")) {
         tty_clear();
     } else if (__strcmp(pkeybuffer, "art")) {
         tty_welcome();
+    } else if (__strcmp(pkeybuffer, "memmap")) {
+        
     }
 
     tty_writecolor("> ", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);

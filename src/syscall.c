@@ -72,7 +72,7 @@ __attribute__((naked, used)) static void syscall_pop_regs()
 /* Callback for handling all syscalls */
 static void syscall_cb(i_register_t registers) 
 {
-    ASSERT_STRICT(registers.eax > (SYSCALL_MAX - 1), "Invalid syscall!");
+    KASSERT(registers.eax > (SYSCALL_MAX - 1), "Invalid syscall!");
 
     // lookup syscall from table and call
     syscall_entries[registers.eax](&registers);
@@ -91,7 +91,7 @@ static void __write(i_register_t* registers)
     size_t n = registers->edx;
 
     // check for standard file descriptors
-    ASSERT_STRICT(fd == STDIN_FD, "stdin not yet supported.");
+    KASSERT(fd == STDIN_FD, "stdin not yet supported.");
 
     if (fd == STDOUT_FD) tty_write(buffer);            // redirect stdout to tty for now
     else if (fd == STDERR_FD) printk("stderr: Error %s\n");

@@ -18,6 +18,12 @@
 
 #include "multiboot.h"
 
+extern multiboot_info_t* g_mbd;
+
+
+void display_mm();
 void pmm_init(volatile multiboot_info_t* mbd);
-void* pm_alloc();
+
+void* pm_alloc_frame();
+
 int pm_free();

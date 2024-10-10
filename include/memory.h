@@ -22,7 +22,10 @@
 #define PD_ENTRIES      1024
 #define PD_NOT_PRESENT  0x00000002
 #define SUP_RW_PRESENT  0x00000003
-#define PG_SIZE       4096
+#define PAGE_SIZE       4096
+
+/* 4GB of addressable memory */
+#define MAX_PAGES 1024 * 1024
 
 #define KB 1024
 #define MB (1024 * 1024)
@@ -76,7 +79,6 @@ typedef struct {
     struct freelist* freelist;
 } mmap_t;
 
-void memory_init(volatile multiboot_info_t* mbd);
 
 /* Invalidate a page of PAGE_SIZE */
 static inline void __invlpg(uint32_t vaddr)

@@ -16,12 +16,13 @@
 
 #include "drivers/keyboard.h"
 #include "drivers/tty.h"
+#include "drivers/vga.h"
 #include "io.h"
 #include "string.h"
 #include "stdio.h"
 #include "interrupt.h"
 
-const uint32_t lowercase[128] = {
+static const uint32_t lowercase[128] = {
     UNKNOWN,ESC,'1','2','3','4','5','6','7','8',
     '9','0','-','=','\b','\t','q','w','e','r',
     't','y','u','i','o','p','[',']','\n',CTRL,
@@ -34,7 +35,7 @@ const uint32_t lowercase[128] = {
     UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
 };
 
-const uint32_t uppercase[128] = {
+static const uint32_t uppercase[128] = {
     UNKNOWN,ESC,'!','@','#','$','%','^','&','*','(',')','_','+','\b','\t','Q','W','E','R',
     'T','Y','U','I','O','P','{','}','\n',CTRL,'A','S','D','F','G','H','J','K','L',':','"','~',LSHFT,'|','Z','X','C',
     'V','B','N','M','<','>','?',RSHFT,'*',ALT,' ',CAPS,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,NUMLCK,SCRLCK,HOME,UP,PGUP,'-',
@@ -77,26 +78,30 @@ static void __keyboard_cb(__attribute__((unused)) i_register_t registers) {
         case 96:
             // TODO: this is fucked up
             if (pressed == 0) {
-                __strncpy(keybuffer, prevkb, sizeof(keybuffer));
+                __strncpy(keybuffer, prevkb, 256);
                 tty_write(keybuffer);
             }
+
             break;
         case 28:
             if (pressed == 0) {
                 tty_putc(lowercase[scan]);
-                __strncpy(prevkb, keybuffer, sizeof(prevkb));
+                __strncpy(prevkb, keybuffer, 256);
 
                 // kernel cli for interpreting basic commands
                 kcli(keybuffer, sizeof(keybuffer));
             }
+
             break;
         case 41:
             tty_write("\n\nRebooting...\n");
             warm_reboot();
+
             break;
         case 54:
         case 42:
             caps = (pressed == 0) ? true : false;
+
             break;
         case 58:
             if (!caps_lock && pressed == 0) {
@@ -104,6 +109,13 @@ static void __keyboard_cb(__attribute__((unused)) i_register_t registers) {
             } else if (caps_lock && pressed == 0) {
                 caps_lock = false;
             }
+
+            break;
+        case 14:
+            if (pressed == 0) {
+                cursor_pos_t pos = vga_get_cursor_position();
+            }
+
             break;
         default:
             if (pressed == 0) {

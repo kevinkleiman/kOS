@@ -156,7 +156,7 @@ void idt_init()
     BOOT_LOG("IDT Loaded.")
 
     // check if interrupts are successfully enabled
-    ASSERT_STRICT(!__check_interrupts_enabled(), "Interrupt init fail!");
+    KASSERT(!__check_interrupts_enabled(), "Interrupt init fail!");
 }
 
 void register_interrupt_handler(uint8_t index, isr_t handler) 

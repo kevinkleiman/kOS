@@ -17,11 +17,14 @@
 #pragma once
 
 /* For fast error handling */
-#define ASSERT_GOTO_FAIL(__cond) do { if (__cond) { goto fail; } } while(0)
+#define KASSERT_GOTO_FAIL(__cond) do { if (__cond) { goto fail; } } while(0)
 
 /* Assert condition with panic failover */
-#define ASSERT_STRICT(__cond, __s) \
+#define KASSERT(__cond, __s) \
     do { if (__cond) { __panic(__s); } } while(0)
+
+/* Null typdef */
+#define NULL (void *) 0x0
 
 /* Type for checking common return values (success/fail) */
 typedef enum {
